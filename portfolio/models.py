@@ -2,7 +2,7 @@ from django.db import models
 from django.db.models.sql.constants import GET_ITERATOR_CHUNK_SIZE
 
 # Create your models here.
-class Skills(models.fields.Model):
+class Skills(models.Model):
     name = models.CharField(max_length=100)
     proficiency = models.IntegerField()
     category = models.CharField(max_length=100)
@@ -29,7 +29,7 @@ class Projects(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     
     class Meta:
-        ordering = ['created_at']
+        ordering = ['-created_at']
     
     def __str__(self):
         return self.title
@@ -48,7 +48,7 @@ class Timeline(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     
     class Meta:
-        ordering = ['created_at']
+        ordering = ['-created_at']
     
     def __str__(self):
         return self.title
@@ -63,7 +63,7 @@ class Contact(models.Model):
     is_read = models.BooleanField(default=False, help_text='Mark as read when the message is read')
     
     class Meta:
-        ordering = ['submitted_at']
+        ordering = ['-submitted_at']
     
     def __str__(self):
         return self.name
@@ -91,7 +91,7 @@ class BlogPost(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     
     class Meta:
-        ordering = ['-created_at']
+        ordering = ['created_at']
         
     def __str__(self):
         return self.title
@@ -100,8 +100,8 @@ class AboutMe(models.Model):
     name = models.CharField(max_length=100, default='Phayvo')
     headline = models.CharField(max_length=200, help_text='Full Stack Developer and Visual Designer')
     bio = models.TextField()
-    profile_image = models.ImageField(uploaded_to='/media/profile')
-    resume_pdf = models.FileField(upload_to='/media/resume', blank=True, null=True)
+    profile_image = models.ImageField(upload_to='media/profile')
+    resume_pdf = models.FileField(upload_to='media/resume', blank=True, null=True)
     # Social Links
     github_link = models.URLField(max_length=100, blank=True, null=True)
     twitter_link = models.URLField(max_length=100, blank=True, null=True)
@@ -113,5 +113,5 @@ class AboutMe(models.Model):
         verbose_name_plural = "About Me"
         
     def __str__(self):
-        return f"About: {self.title}"
-    
+        return f"About: {self.name}"
+
