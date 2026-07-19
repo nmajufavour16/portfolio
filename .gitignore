@@ -1,3 +1,11 @@
 .env
 venv/
+
+__pycache__/
+*.py[cod]
+*$py.class
+
 static/
+
+staticfiles/
+static_root/
