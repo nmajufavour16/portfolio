@@ -1,4 +1,4 @@
-# PH$YVO — Digital Architecture & Design
+# PH4YVO — Digital Architecture & Design
 
 > **Function Over Form.** 
 > A minimalist, high-performance personal portfolio showcasing a unified blend of visual design and robust software engineering.
@@ -11,7 +11,7 @@ The frontend architecture prioritizes an intuitive user experience, utilizing he
 ## ✦ The Architect 
 **Nmaju Favour (Phayvo)**
 * Visual Designer & Full-Stack Web Developer
-* B.Sc Information Technology, **University of Port Harcourt**
+* B.Sc Information Technology — Undergraduate, **University of Port Harcourt**
 
 ## ✦ Tech Stack & Arsenal
 
