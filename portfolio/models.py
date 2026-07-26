@@ -19,9 +19,16 @@ class Projects(models.Model):
     title = models.CharField(max_length=100)
     slug = models.SlugField(max_length=100)
     category = models.CharField(max_length=50, choices=Category.choices, default=Category.FULLSTACK)
-    thumbnail = models.ImageField(upload_to='media/projects/')
+    thumbnail = models.ImageField(upload_to='projects/')
     description = models.CharField(max_length=200)
-    skills_used = models.ManyToManyField(Skills, related_name='projects')
+    
+    architecture_notes = models.TextField(blank=True, help_text='DEV: Problem, Architecture, Key Decisions. Leave blank for Design Projects.')
+    design_role = models.CharField(max_length=100, blank=True, help_text="Design: e.g. 'Brand Identity, UI/UX'. Leave blank for DEV projects.")
+    skills_used = models.ManyToManyField(Skills, related_name='projects', blank=True)
+    featured = models.BooleanField(default=False)
+    order = models.PositiveIntegerField(default=0, help_text='Determines display order in the portfolio')
+    created_at = models.DateTimeField(auto_now_add=True)
+
     github_url = models.URLField(max_length=200, blank=True, null=True)
     live_url = models.URLField(max_length=200, blank=True, null=True)
     canva_url = models.URLField(max_length=200, blank=True, null=True)
@@ -34,10 +41,15 @@ class Projects(models.Model):
     def __str__(self):
         return self.title
     
+    @property
+    def is_design(self):
+        return self.category == self.Category.DESIGN
+    
 class Timeline(models.Model):
     class EventType(models.TextChoices):
         EDUCATION = 'Education'
         EXPERIENCE = 'Experience'
+        CERTIFICATION = 'Certification'
         
     event_type = models.CharField(max_length=50, choices=EventType.choices, default=EventType.EXPERIENCE)
     title = models.CharField(max_length=100)
@@ -45,10 +57,11 @@ class Timeline(models.Model):
     date = models.DateField()
     location = models.CharField(max_length=100)
     
+    credential_url = models.URLField(max_length=200, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     
     class Meta:
-        ordering = ['-created_at']
+        ordering = ['-data']
     
     def __str__(self):
         return self.title
@@ -84,6 +97,7 @@ class BlogPost(models.Model):
     title = models.CharField(max_length=200)
     slug = models.SlugField(unique=True, help_text="URL friendly name(e.g., how-i-built-waityr)")
     cover_image = models.ImageField(upload_to='media/covers/', blank=True, null=True)
+    excerpt = models.CharField(max_length=200, blank=True, null=True)
     content = models.TextField()
     
     is_published = models.BooleanField(default=False)
@@ -96,12 +110,19 @@ class BlogPost(models.Model):
     def __str__(self):
         return self.title
     
+    @property
+    def reading_time(self):
+        words = len(self.content.split())
+        return max(1, words / 200)
+    
 class AboutMe(models.Model):
     name = models.CharField(max_length=100, default='Phayvo')
     headline = models.CharField(max_length=200, help_text='Full Stack Developer and Visual Designer')
     bio = models.TextField()
-    profile_image = models.ImageField(upload_to='media/profile')
-    resume_pdf = models.FileField(upload_to='media/resume', blank=True, null=True)
+    profile_image = models.ImageField(upload_to='profile/')
+    resume_pdf = models.FileField(upload_to='resume/', blank=True, null=True)
+    
+    github_username = models.CharField(max_length=100, blank=True, null=True)
     # Social Links
     github_link = models.URLField(max_length=100, blank=True, null=True)
     twitter_link = models.URLField(max_length=100, blank=True, null=True)

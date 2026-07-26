@@ -20,17 +20,17 @@
 </head>
 
 <!-- hx-boost converts standard anchor tags into smooth AJAX requests -->
-<body hx-boost="true" class="bg-[#fafafa] text-gray-900 font-sans antialiased selection:bg-black selection:text-white">
+<body hx-boost="true" class="bg-[#000000] text-gray-900 font-sans antialiased selection:bg-black selection:text-white">
 
     <!-- Global Navigation -->
     <nav class="fixed top-0 w-full z-50 bg-[#fafafa]/80 backdrop-blur-md border-b border-gray-200">
         <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-            <a href="{% url 'home' %}" class="text-xl font-bold tracking-tight uppercase">Phayvo.</a>
+            <a href="{% url 'home' %}" class="text-xl font-bold tracking-tight uppercase">PH4YVO</a>
             
             <div class="space-x-8 text-sm font-medium tracking-wide">
                 <a href="{% url 'projects' %}" class="hover:text-gray-500 transition-colors">Work</a>
                 <a href="{% url 'about' %}" class="hover:text-gray-500 transition-colors">About</a>
-                <a href="{% url 'blog_list' %}" class="hover:text-gray-500 transition-colors">Journal</a>
+                <a href="{% url 'blog' %}" class="hover:text-gray-500 transition-colors">Journal</a>
                 <a href="{% url 'contact' %}" class="hover:text-gray-500 transition-colors">Contact</a>
             </div>
         </div>

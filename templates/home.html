@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="min-h-[80vh] flex flex-col justify-center items-start">
+    <div class="space-y-6 max-w-4xl">
+        <h1 class="text-6xl md:text-8xl font-black tracking-tighter uppercase leading-none">
+            Digital<br/>Architecture<br/>& Design.
+        </h1>
+        
+        <p class="text-lg md:text-2xl text-gray-600 font-medium max-w-2xl leading-relaxed">
+            I engineer robust full-stack applications and craft highly intuitive visual identities.
+        </p>
+
+        <div class="pt-8 flex gap-6">
+            <a href="{% url 'projects' %}" class="px-8 py-4 bg-black text-white text-sm font-bold uppercase tracking-widest hover:bg-gray-800 transition-colors">
+                View Work
+            </a>
+            <a href="{% url 'about' %}" class="px-8 py-4 border border-black text-black text-sm font-bold uppercase tracking-widest hover:bg-black hover:text-white transition-colors">
+                The Journey
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Selected Projects Preview -->
+<section class="py-20 border-t border-gray-200">
+    <div class="flex justify-between items-end mb-12">
+        <h2 class="text-3xl font-bold tracking-tight uppercase">Selected Works</h2>
+        <a href="{% url 'projects' %}" class="text-sm font-bold uppercase tracking-widest text-gray-500 hover:text-black transition-colors">See All &#8594;</a>
+    </div>
+
+    <!-- Project Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+        {% for project in projects|slice:":4" %}
+        <a href="{% url 'project_detail' project.slug %}" class="group block">
+            <!-- Thumbnail Container -->
+            <div class="relative aspect-video overflow-hidden bg-gray-100 mb-6">
+                {% if project.thumbnail %}
+                    <img src="{{ project.thumbnail.url }}" alt="{{ project.title }}" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 ease-in-out transform group-hover:scale-105">
+                {% else %}
+                    <div class="w-full h-full flex items-center justify-center text-gray-300 font-bold uppercase tracking-widest">No Image</div>
+                {% endif %}
+                
+                <!-- Category Badge -->
+                <div class="absolute top-4 left-4 px-3 py-1 bg-white/90 text-xs font-bold uppercase tracking-wider backdrop-blur-sm">
+                    {{ project.get_category_display }}
+                </div>
+            </div>
+
+            <!-- Project Meta -->
+            <div>
+                <h3 class="text-2xl font-bold tracking-tight mb-2 group-hover:text-gray-600 transition-colors">{{ project.title }}</h3>
+                <p class="text-gray-500 text-sm mb-4">{{ project.description|truncatechars:100 }}</p>
+                
+                <!-- Skills Tags -->
+                <div class="flex flex-wrap gap-2">
+                    {% for skill in project.skills_used.all|slice:":3" %}
+                        <span class="text-xs font-bold uppercase tracking-widest text-gray-400 border border-gray-200 px-2 py-1">{{ skill.name }}</span>
+                    {% endfor %}
+                    {% if project.skills_used.count > 3 %}
+                        <span class="text-xs font-bold uppercase tracking-widest text-gray-400 px-2 py-1">...</span>
+                    {% endif %}
+                </div>
+            </div>
+        </a>
+        {% empty %}
+        <div class="col-span-full py-20 text-center text-gray-400 font-bold uppercase tracking-widest">
+            Deploying projects soon...
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock content %}
