@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block title %}Contact — {{ block.super }}{% endblock %}
+
+{% block content %}
+
+<section class="contact-hero" data-reveal>
+    <h1 class="section-title">Let's work together</h1>
+    <p class="section-subtitle">Have a project in mind, or just want to say hi? Drop a message below.</p>
+</section>
+
+<section class="contact-form-section" data-reveal>
+    {% if messages %}
+    <ul class="form-messages">
+        {% for message in messages %}
+        <li class="form-message form-message--{{ message.tags }}">{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    <form method="post" class="contact-form" novalidate>
+        {% csrf_token %}
+        {{ form.website }}
+
+        <div class="form-field">
+            <label for="{{ form.name.id_for_label }}">Name</label>
+            {{ form.name }}
+            {% if form.name.errors %}<p class="form-field__error">{{ form.name.errors|striptags }}</p>{% endif %}
+        </div>
+
+        <div class="form-field">
+            <label for="{{ form.email.id_for_label }}">Email</label>
+            {{ form.email }}
+            {% if form.email.errors %}<p class="form-field__error">{{ form.email.errors|striptags }}</p>{% endif %}
+        </div>
+
+        <div class="form-field">
+            <label for="{{ form.subject.id_for_label }}">Subject</label>
+            {{ form.subject }}
+        </div>
+
+        <div class="form-field">
+            <label for="{{ form.message.id_for_label }}">Message</label>
+            {{ form.message }}
+            {% if form.message.errors %}<p class="form-field__error">{{ form.message.errors|striptags }}</p>{% endif %}
+        </div>
+
+        <button type="submit" class="btn btn--primary">Send message</button>
+    </form>
+
+    <div class="contact-info" data-reveal>
+        {% if global_about.github_link %}<a href="{{ global_about.github_link }}" target="_blank" rel="noopener">GitHub</a>{% endif %}
+        {% if global_about.linkedin_link %}<a href="{{ global_about.linkedin_link }}" target="_blank" rel="noopener">LinkedIn</a>{% endif %}
+        {% if global_about.instagram_link %}<a href="{{ global_about.instagram_link }}" target="_blank" rel="noopener">Instagram</a>{% endif %}
+    </div>
+</section>
+
+{% endblock %}

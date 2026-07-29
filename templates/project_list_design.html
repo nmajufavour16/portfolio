@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}Design — {{ block.super }}{% endblock %}
+
+{% block content %}
+<section class="work-section work-section--design">
+    <header class="section-header">
+        <span class="section-index">03</span>
+        <h1 class="section-title">Design</h1>
+        <p class="section-subtitle">Brand, product, and visual work — process included.</p>
+    </header>
+
+    <div id="project-grid" class="project-grid project-grid--masonry" data-reveal>
+        {% include 'partials/project_grid_design.html' %}
+    </div>
+</section>
+{% endblock %}

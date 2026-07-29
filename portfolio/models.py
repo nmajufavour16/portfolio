@@ -61,7 +61,7 @@ class Timeline(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     
     class Meta:
-        ordering = ['-data']
+        ordering = ['-date']
     
     def __str__(self):
         return self.title
@@ -136,3 +136,10 @@ class AboutMe(models.Model):
     def __str__(self):
         return f"About: {self.name}"
 
+class ProjectImage(models.Model):
+    project = models.ForeignKey('Projects', on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='media/images/')
+    description = models.TextField(blank=True, null=True)
+    
+    def __str__(self):
+        return self.image.name

@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ project.title }} — {{ block.super }}{% endblock %}
+
+{% block content %}
+<article class="case-study case-study--design">
+    <a href="{% url 'project_list_design' %}" class="case-study__back">&larr; Design</a>
+
+    <header class="case-study__header">
+        <span class="case-study__category">{{ project.design_role }}</span>
+        <h1 class="case-study__title">{{ project.title }}</h1>
+        <p class="case-study__summary">{{ project.description }}</p>
+
+        {% if project.canva_url %}
+        <a href="{{ project.canva_url }}" target="_blank" rel="noopener" class="case-study__canva-link">View on Canva</a>
+        {% endif %}
+    </header>
+
+    <div class="case-study__hero" data-reveal>
+        <img src="{{ project.thumbnail.url }}" alt="{{ project.title }}">
+    </div>
+
+    {% if process_images %}
+    <section class="case-study__gallery case-study__gallery--process">
+        <h2>Process</h2>
+        <div class="gallery-grid" data-reveal>
+            {% for image in process_images %}
+            <figure class="gallery-item">
+                <img src="{{ image.image.url }}" alt="{{ image.caption }}" loading="lazy">
+                {% if image.caption %}<figcaption>{{ image.caption }}</figcaption>{% endif %}
+            </figure>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+
+    {% if final_images %}
+    <section class="case-study__gallery case-study__gallery--final">
+        <h2>Final</h2>
+        <div class="gallery-grid" data-reveal>
+            {% for image in final_images %}
+            <figure class="gallery-item">
+                <img src="{{ image.image.url }}" alt="{{ image.caption }}" loading="lazy">
+                {% if image.caption %}<figcaption>{{ image.caption }}</figcaption>{% endif %}
+            </figure>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+
+    {% if project.skills_used.all %}
+    <section class="case-study__tools">
+        <h2>Tools</h2>
+        <ul class="tech-pills">
+            {% for skill in project.skills_used.all %}
+            <li class="tech-pill">{{ skill.name }}</li>
+            {% endfor %}
+        </ul>
+    </section>
+    {% endif %}
+</article>
+{% endblock %}

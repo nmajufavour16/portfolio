@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load markdownify %}
+
+{% block title %}{{ post.title }} — {{ block.super }}{% endblock %}
+{% block meta_description %}{{ post.excerpt|default:post.title }}{% endblock %}
+
+{% block content %}
+
+<article class="blog-post" data-reveal>
+    <a href="{% url 'blog_list' %}" class="case-study__back">&larr; Blog</a>
+
+    <header class="blog-post__header">
+        <span class="blog-post__meta">{{ post.created_at|date:"F j, Y" }} &middot; {{ post.reading_time }} min read</span>
+        <h1 class="blog-post__title">{{ post.title }}</h1>
+    </header>
+
+    {% if post.cover_image %}
+    <div class="blog-post__cover" data-reveal>
+        <img src="{{ post.cover_image.url }}" alt="{{ post.title }}">
+    </div>
+    {% endif %}
+
+    <div class="blog-post__content prose" data-reveal>
+        {{ post.content|markdownify }}
+    </div>
+</article>
+
+{% endblock %}

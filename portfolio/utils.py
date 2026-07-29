@@ -43,3 +43,17 @@ def get_github_contributions(username, cache_hours=6):
         return calendar
     except (requests.RequestException, KeyError, ValueError, TypeError):
         return None
+    
+def get_visit_count():
+    key = 'site_visit_count'
+    try:
+        return cache.incr(key)
+    except ValueError:
+        cache.set(key, 1, timeout=None)
+        return 1
+    
+def group_skills_by_category(skills_queryset):
+    grouped = {}
+    for skill in skills_queryset:
+        grouped.setdefault(skill.category, []).append(skill)
+    return grouped

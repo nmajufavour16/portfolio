@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}Blog — {{ block.super }}{% endblock %}
+
+{% block content %}
+
+<section class="blog-list" data-reveal>
+    <header class="section-header">
+        <span class="section-index">00</span>
+        <h1 class="section-title">Blog</h1>
+    </header>
+
+    <div class="blog-preview__grid">
+        {% for post in page_obj %}
+        <a href="{% url 'blog_detail' post.slug %}" class="blog-card">
+            {% if post.cover_image %}<img src="{{ post.cover_image.url }}" alt="" loading="lazy">{% endif %}
+            <h3>{{ post.title }}</h3>
+            <p>{{ post.excerpt|default:post.content|truncatewords:24 }}</p>
+            <span class="blog-card__meta">{{ post.reading_time }} min read &middot; {{ post.created_at|date:"M Y" }}</span>
+        </a>
+        {% empty %}
+        <p>No posts published yet.</p>
+        {% endfor %}
+    </div>
+
+    {% if page_obj.has_other_pages %}
+    <nav class="pagination" aria-label="Blog pagination">
+        {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}" class="pagination__link">&larr; Newer</a>
+        {% endif %}
+        <span class="pagination__status">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}" class="pagination__link">Older &rarr;</a>
+        {% endif %}
+    </nav>
+    {% endif %}
+</section>
+
+{% endblock %}

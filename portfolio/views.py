@@ -2,20 +2,24 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.core.paginator import Paginator
 
+
 from .models import AboutMe, Contact, Skills, Projects, BlogPost, Testimonials, Timeline, ProjectImage
 from .forms import ContactForm
 from .utils import get_github_contributions
 
 def home(request):
     about = AboutMe.objects.first()
+    projects = Projects.objects.all()
     context = {
         'about': about,
-        'feautured_projects': Projects.objects.filter(is_featured=True)[:4],
+        'projects' : projects,
+        'featured_projects': Projects.objects.filter(featured=True)[:4],
         'recents_posts': BlogPost.objects.filter(is_published=True)[:3],
         'testimonials': Testimonials.objects.all(),
         'contributions': (
             get_github_contributions(about.github_username)
-            if about and about.github_username else None
+            if about and about.github_username 
+            else None
         ),
     }
     return render(request, 'home.html', context)
@@ -74,7 +78,8 @@ def blog_detail(request, slug):
 def about(request):
     context = {
         'about': AboutMe.objects.first(),
-        'timeline': Timeline.objects.all(),
+        'certifications': Timeline.objects.filter(category=Timeline.Category.CERTIFICATION),
+        'story_milestones': Timeline.objects.exclude(category=Timeline.Category.CERTIFICATION),
     }
     return render(request, 'about.html', context)
 
@@ -97,3 +102,16 @@ def contact(request):
     else:
         form = ContactForm()
     return render(request, 'contact.html', {'form': form})
+
+def testimonials(request):
+    context = {'testimonials' : testimonials}
+    return render(request, context)
+
+def resume(request):
+    context = {'resume' : resume}
+    return render(request, context)
+
+def error_404(request):
+    return render(request, 'error_404.html')
+
+ 

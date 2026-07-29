@@ -1,0 +1,14 @@
+{% for project in projects %}
+<article class="project-card project-card--design">
+    <a href="{% url 'project_detail' project.slug %}" class="project-card__link">
+        <div class="project-card__thumb">
+            <img src="{{ project.thumbnail.url }}" alt="{{ project.title }}" loading="lazy">
+            <div class="project-card__hover">
+                <span class="project-card__role">{{ project.design_role }}</span>
+            </div>
+        </div>
+    </a>
+</article>
+{% empty %}
+<p class="project-grid__empty">No design work published yet.</p>
+{% endfor %}

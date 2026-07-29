@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block title %}About — {{ block.super }}{% endblock %}
+
+{% block content %}
+
+<section class="about-hero" data-reveal>
+    <h1 class="section-title">About</h1>
+    {% if about.profile_image %}
+    <img src="{{ about.profile_image.url }}" alt="{{ about.name }}" class="about-hero__portrait">
+    {% endif %}
+    <div class="about-hero__bio prose">
+        {{ about.bio|linebreaks }}
+    </div>
+</section>
+
+<section class="certifications" data-reveal>
+    <header class="section-header">
+        <span class="section-index">01</span>
+        <h2 class="section-title">Certifications &amp; Awards</h2>
+    </header>
+
+    <div class="cert-grid">
+        {% for entry in certifications %}
+        <div class="cert-card" data-reveal>
+            <span class="cert-card__badge">Verified</span>
+            <h3 class="cert-card__title">{{ entry.title }}</h3>
+            <p class="cert-card__meta">{{ entry.location }} &middot; {{ entry.date|date:"Y" }}</p>
+            {% if entry.credential_url %}
+            <a href="{{ entry.credential_url }}" target="_blank" rel="noopener" class="cert-card__link">Verify credential &rarr;</a>
+            {% endif %}
+        </div>
+        {% empty %}
+        <p>No certifications listed yet.</p>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="timeline" data-reveal>
+    <header class="section-header">
+        <span class="section-index">02</span>
+        <h2 class="section-title">The Story So Far</h2>
+    </header>
+
+    <ol class="timeline__list">
+        {% for entry in story_milestones reversed %}
+        <li class="timeline__item timeline__item--{{ entry.event_type|lower }}" data-reveal>
+            <div class="timeline__marker"></div>
+            <div class="timeline__content">
+                <span class="timeline__type">{{ entry.get_event_type_display }}</span>
+                <span class="timeline__date">
+                    {{ entry.date|date:"M Y" }}{% if entry.end_date %} &ndash; {{ entry.end_date|date:"M Y" }}{% elif entry.event_type == 'Experience' or entry.event_type == 'Education' %} &ndash; Present{% endif %}
+                </span>
+                <h3 class="timeline__title">{{ entry.title }}</h3>
+                {% if entry.location %}<p class="timeline__location">{{ entry.location }}</p>{% endif %}
+                <p class="timeline__description">{{ entry.description }}</p>
+            </div>
+        </li>
+        {% empty %}
+        <p>Timeline coming soon.</p>
+        {% endfor %}
+    </ol>
+</section>
+
+<section class="cta-band" data-reveal>
+    <h2>Want the full picture?</h2>
+    <a href="{% url 'contact' %}" class="btn btn--primary">Get in touch</a>
+</section>
+
+{% endblock %}

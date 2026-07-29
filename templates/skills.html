@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}Skills — {{ block.super }}{% endblock %}
+
+{% block content %}
+
+<section class="skills-page" data-reveal>
+    <header class="section-header">
+        <span class="section-index">00</span>
+        <h1 class="section-title">Skills</h1>
+    </header>
+
+    {% for category, skills in grouped_skills.items %}
+    <div class="skills-page__group" data-reveal>
+        <h2 class="skills-page__category">{{ category }}</h2>
+        <ul class="proficiency-list">
+            {% for skill in skills %}
+            <li class="proficiency-item">
+                <div class="proficiency-item__label">
+                    <span>{{ skill.name }}</span>
+                    <span>{{ skill.proficiency }}%</span>
+                </div>
+                <div class="proficiency-item__track">
+                    <div class="proficiency-item__fill" data-progress="{{ skill.proficiency }}"></div>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% empty %}
+    <p>Skills coming soon.</p>
+    {% endfor %}
+</section>
+
+{% endblock %}

@@ -1,75 +1,216 @@
 {% extends 'base.html' %}
-{% load static %}
+
+{% block title %}{{ about.headline|default:"Nmaju Favour — Full Stack Developer & Visual Designer" }}{% endblock %}
 
 {% block content %}
-<!-- Hero Section -->
-<section class="min-h-[80vh] flex flex-col justify-center items-start">
-    <div class="space-y-6 max-w-4xl">
-        <h1 class="text-6xl md:text-8xl font-black tracking-tighter uppercase leading-none">
-            Digital<br/>Architecture<br/>& Design.
-        </h1>
-        
-        <p class="text-lg md:text-2xl text-gray-600 font-medium max-w-2xl leading-relaxed">
-            I engineer robust full-stack applications and craft highly intuitive visual identities.
-        </p>
 
-        <div class="pt-8 flex gap-6">
-            <a href="{% url 'projects' %}" class="px-8 py-4 bg-black text-white text-sm font-bold uppercase tracking-widest hover:bg-gray-800 transition-colors">
-                View Work
-            </a>
-            <a href="{% url 'about' %}" class="px-8 py-4 border border-black text-black text-sm font-bold uppercase tracking-widest hover:bg-black hover:text-white transition-colors">
-                The Journey
-            </a>
+<!-- HERO -->
+<section class="hero">
+    <div class="hero__status" data-reveal>
+        <span class="status-dot is-live"></span>
+        Available for work
+    </div>
+
+    <div class="hero__main">
+        {% if about.profile_image %}
+        <img src="{{ about.profile_image.url }}" alt="{{ about.name }}" class="hero__portrait" data-reveal>
+        {% endif %}
+
+        <h1 class="hero__name" data-reveal>Hi, I'm {{ about.name|default:"PHAYVO" }}</h1>
+        <p class="hero__headline" data-reveal>{{ about.headline|default:"Full Stack Developer & Visual Designer." }}</p>
+
+        <div class="hero__actions" data-reveal>
+            {% if about.resume_pdf %}
+            <a href="{{ about.resume_pdf.url }}" class="btn btn--primary" target="_blank">View Resume</a>
+            {% endif %}
+            <a href="{% url 'contact' %}" class="btn btn--ghost">Get in touch</a>
+        </div>
+
+        <div class="hero__socials" data-reveal>
+            {% if about.github_link %}<a href="{{ about.github_link }}" target="_blank" rel="noopener">GitHub</a>
+            {% endif %}
+            {% if about.linkedin_link %}<a href="{{ about.linkedin_link }}" target="_blank"
+                rel="noopener">LinkedIn</a>{% endif %}
+            {% if about.instagram_link %}<a href="{{ about.instagram_link }}" target="_blank"
+                rel="noopener">Instagram</a>{% endif %}
+        </div>
+    </div>
+
+    <!-- rotating tagline ticker, echoes Rameshwar's "Next.js Expert • Product Builder •..." -->
+    <div class="marquee hero__ticker" aria-hidden="true">
+        <div class="marquee__track">
+            <span>Full Stack Developer</span><span class="marquee__dot">&bull;</span>
+            <span>Visual Designer</span><span class="marquee__dot">&bull;</span>
+            <span>AI Product Builder</span><span class="marquee__dot">&bull;</span>
+            <span>Backend Engineer</span><span class="marquee__dot">&bull;</span>
+            <span>Visual Designer</span><span class="marquee__dot">&bull;</span>
+            <span>Product Builder</span><span class="marquee__dot">&bull;</span>
         </div>
     </div>
 </section>
 
-<!-- Selected Projects Preview -->
-<section class="py-20 border-t border-gray-200">
-    <div class="flex justify-between items-end mb-12">
-        <h2 class="text-3xl font-bold tracking-tight uppercase">Selected Works</h2>
-        <a href="{% url 'projects' %}" class="text-sm font-bold uppercase tracking-widest text-gray-500 hover:text-black transition-colors">See All &#8594;</a>
+<!-- LIVE STATS -->
+<section class="stats-bar" data-reveal>
+    <div class="stat">
+        <span class="stat__value" data-counter data-target="{{ years_experience }}">3</span>+
+        <span class="stat__label">Years Experience</span>
     </div>
+    <div class="stat">
+        <span class="stat__value" data-counter data-target="{{ total_skills }}">10</span>+
+        <span class="stat__label">Tech Stack Skills</span>
+    </div>
+    <div class="stat">
+        <span class="stat__value" data-counter data-target="{{ total_projects }}">6</span>+
+        <span class="stat__label">Total Projects</span>
+    </div>
+    <div class="stat">
+        <span class="stat__value" data-counter data-target="{{ visit_count }}">15</span>
+        <span class="stat__label">Profile Visitors</span>
+    </div>
+</section>
 
-    <!-- Project Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
-        {% for project in projects|slice:":4" %}
-        <a href="{% url 'project_detail' project.slug %}" class="group block">
-            <!-- Thumbnail Container -->
-            <div class="relative aspect-video overflow-hidden bg-gray-100 mb-6">
-                {% if project.thumbnail %}
-                    <img src="{{ project.thumbnail.url }}" alt="{{ project.title }}" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 ease-in-out transform group-hover:scale-105">
-                {% else %}
-                    <div class="w-full h-full flex items-center justify-center text-gray-300 font-bold uppercase tracking-widest">No Image</div>
-                {% endif %}
-                
-                <!-- Category Badge -->
-                <div class="absolute top-4 left-4 px-3 py-1 bg-white/90 text-xs font-bold uppercase tracking-wider backdrop-blur-sm">
-                    {{ project.get_category_display }}
-                </div>
+<!-- GITHUB ACTIVITY -->
+<section class="github-activity" data-reveal>
+    <header class="section-header">
+        <span class="section-index">01</span>
+        <h2 class="section-title">GitHub Activity</h2>
+    </header>
+
+    {% if contributions %}
+    <div class="contrib-graph">
+        <p class="contrib-graph__total">{{ contributions.totalContributions }} contributions in the last year</p>
+        <div class="contrib-graph__grid">
+            {% for week in contributions.weeks %}
+            <div class="contrib-graph__week">
+                {% for day in week.contributionDays %}
+                {# data-count powers CSS intensity levels — style via attribute selectors, e.g. [data-count="0"],
+                [data-count^="1"]...[data-count^="9"] #}
+                <span class="contrib-graph__day" data-count="{{ day.contributionCount }}"
+                    title="{{ day.date }}: {{ day.contributionCount }} contributions"></span>
+                {% endfor %}
             </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% else %}
+    <p class="contrib-graph__empty">GitHub activity unavailable right now.</p>
+    {% endif %}
+</section>
 
-            <!-- Project Meta -->
-            <div>
-                <h3 class="text-2xl font-bold tracking-tight mb-2 group-hover:text-gray-600 transition-colors">{{ project.title }}</h3>
-                <p class="text-gray-500 text-sm mb-4">{{ project.description|truncatechars:100 }}</p>
-                
-                <!-- Skills Tags -->
-                <div class="flex flex-wrap gap-2">
-                    {% for skill in project.skills_used.all|slice:":3" %}
-                        <span class="text-xs font-bold uppercase tracking-widest text-gray-400 border border-gray-200 px-2 py-1">{{ skill.name }}</span>
-                    {% endfor %}
-                    {% if project.skills_used.count > 3 %}
-                        <span class="text-xs font-bold uppercase tracking-widest text-gray-400 px-2 py-1">...</span>
-                    {% endif %}
-                </div>
+<!-- FEATURED WORK -->
+<section class="featured-work" data-reveal>
+    <header class="section-header">
+        <span class="section-index">02</span>
+        <h2 class="section-title">Featured Work</h2>
+        <div class="section-header__links">
+            <a href="{% url 'project_list_dev' %}">Development &rarr;</a>
+            <a href="{% url 'project_list_design' %}">Design &rarr;</a>
+        </div>
+    </header>
+
+    <div class="featured-work__grid">
+        {% for project in featured_projects %}
+        <a href="{% url 'project_detail' project.slug %}" class="project-showcase">
+            <div class="project-showcase__thumb">
+                <img src="{{ project.thumbnail.url }}" alt="{{ project.title }}"
+                    class="project-showcase__img project-showcase__img--base" loading="lazy">
+                {% with hover_image=project.gallery.first %}
+                {% if hover_image %}
+                <img src="{{ hover_image.image.url }}" alt="" class="project-showcase__img project-showcase__img--hover"
+                    loading="lazy">
+                {% endif %}
+                {% endwith %}
+            </div>
+            <div class="project-showcase__meta">
+                <h3>{{ project.title }}</h3>
+                <span class="project-showcase__category">{{ project.get_category_display }}</span>
             </div>
         </a>
         {% empty %}
-        <div class="col-span-full py-20 text-center text-gray-400 font-bold uppercase tracking-widest">
-            Deploying projects soon...
-        </div>
+        <p>Featured projects coming soon.</p>
         {% endfor %}
     </div>
 </section>
-{% endblock content %}
+
+<!-- CORE EXPERTISE — tabbed, proficiency bars -->
+<section class="expertise" data-reveal x-data="{ active: 0 }">
+    <header class="section-header">
+        <span class="section-index">03</span>
+        <h2 class="section-title">Core Expertise</h2>
+    </header>
+
+    <div class="expertise__tabs" role="tablist">
+        {% for category, skills in expertise_groups.items %}
+        <button role="tab" @click="active = {{ forloop.counter0 }}"
+            :class="{ 'is-active': active === {{ forloop.counter0 }} }" class="expertise__tab">
+            {{ category }}
+        </button>
+        {% endfor %}
+    </div>
+
+    {% for category, skills in expertise_groups.items %}
+    <div class="expertise__panel" x-show="active === {{ forloop.counter0 }}" x-cloak>
+        <ul class="proficiency-list">
+            {% for skill in skills %}
+            <li class="proficiency-item">
+                <div class="proficiency-item__label">
+                    <span>{{ skill.name }}</span>
+                    <span>{{ skill.proficiency }}%</span>
+                </div>
+                <div class="proficiency-item__track">
+                    <div class="proficiency-item__fill" data-progress="{{ skill.proficiency }}"></div>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endfor %}
+</section>
+
+<!-- TESTIMONIALS -->
+{% if testimonials %}
+<section class="testimonials" data-reveal>
+    <header class="section-header">
+        <span class="section-index">04</span>
+        <h2 class="section-title">What people say</h2>
+    </header>
+    <div class="testimonials__track">
+        {% for testimonial in testimonials %}
+        <blockquote class="testimonial-card">
+            <p>{{ testimonial.testimonial }}</p>
+            <cite>{{ testimonial.name }} <span>{{ testimonial.title }}</span></cite>
+        </blockquote>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+<!-- BLOG PREVIEW -->
+<section class="blog-preview" data-reveal>
+    <header class="section-header">
+        <span class="section-index">05</span>
+        <h2 class="section-title">From the blog</h2>
+        <a href="{% url 'blog' %}">View all &rarr;</a>
+    </header>
+
+    <div class="blog-preview__grid">
+        {% for post in recent_posts %}
+        <a href="{% url 'blog_detail' post.slug %}" class="blog-card">
+            {% if post.cover_image %}<img src="{{ post.cover_image.url }}" alt="" loading="lazy">{% endif %}
+            <h3>{{ post.title }}</h3>
+            <p>{{ post.excerpt|default:post.content|truncatewords:20 }}</p>
+            <span class="blog-card__meta">{{ post.reading_time }} min read</span>
+        </a>
+        {% empty %}
+        <p>No posts published yet.</p>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- CLOSING CTA -->
+<section class="cta-band" data-reveal>
+    <h2>Let's build something.</h2>
+    <a href="{% url 'contact' %}" class="btn btn--primary">Start a conversation</a>
+</section>
+
+{% endblock %}

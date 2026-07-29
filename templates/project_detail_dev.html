@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ project.title }} — {{ block.super }}{% endblock %}
+
+{% block content %}
+<article class="case-study case-study--dev">
+    <a href="{% url 'project_list_dev' %}" class="case-study__back">&larr; Development</a>
+
+    <header class="case-study__header">
+        <span class="case-study__category">{{ project.get_category_display }}</span>
+        <h1 class="case-study__title">{{ project.title }}</h1>
+        <p class="case-study__summary">{{ project.description }}</p>
+
+        <div class="case-study__links">
+            {% if project.live_url %}<a href="{{ project.live_url }}" target="_blank" rel="noopener">Live site</a>{% endif %}
+            {% if project.github_url %}<a href="{{ project.github_url }}" target="_blank" rel="noopener">Source</a>{% endif %}
+        </div>
+
+        <ul class="tech-pills">
+            {% for skill in project.skills_used.all %}
+            <li class="tech-pill">{{ skill.name }}</li>
+            {% endfor %}
+        </ul>
+    </header>
+
+    <div class="case-study__thumb" data-reveal>
+        <img src="{{ project.thumbnail.url }}" alt="{{ project.title }}">
+    </div>
+
+    {% if project.architecture_notes %}
+    <section class="case-study__architecture">
+        <h2>Architecture &amp; approach</h2>
+        <div class="prose">{{ project.architecture_notes|linebreaks }}</div>
+    </section>
+    {% endif %}
+</article>
+{% endblock %}

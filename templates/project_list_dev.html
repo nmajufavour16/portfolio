@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}Development — {{ block.super }}{% endblock %}
+
+{% block content %}
+<section class="work-section work-section--dev">
+    <header class="section-header">
+        <span class="section-index">02</span>
+        <h1 class="section-title">Development</h1>
+        <p class="section-subtitle">Systems I've built end to end — architecture, tradeoffs, and the code behind them.</p>
+    </header>
+
+    <nav class="tech-filter" aria-label="Filter by technology">
+        <a href="{% url 'project_list_dev' %}"
+           hx-get="{% url 'project_list_dev' %}"
+           hx-target="#project-grid"
+           hx-push-url="true"
+           class="tech-filter__pill {% if not active_filter %}is-active{% endif %}">
+            All
+        </a>
+        {% for skill in skills %}
+        <a href="{% url 'project_list_dev' %}?tech={{ skill.name|urlencode }}"
+           hx-get="{% url 'project_list_dev' %}?tech={{ skill.name|urlencode }}"
+           hx-target="#project-grid"
+           hx-push-url="true"
+           class="tech-filter__pill {% if active_filter == skill.name %}is-active{% endif %}">
+            {{ skill.name }}
+        </a>
+        {% endfor %}
+    </nav>
+
+    <div id="project-grid" class="project-grid" data-reveal>
+        {% include 'partials/project_grid_dev.html' %}
+    </div>
+</section>
+{% endblock %}
