@@ -22,7 +22,7 @@
 
     <div class="cert-grid">
         {% for entry in certifications %}
-        <div class="cert-card" data-reveal>
+        <div class="cert-card" data-spotlight data-reveal>
             <span class="cert-card__badge">Verified</span>
             <h3 class="cert-card__title">{{ entry.title }}</h3>
             <p class="cert-card__meta">{{ entry.location }} &middot; {{ entry.date|date:"Y" }}</p>
@@ -42,24 +42,29 @@
         <h2 class="section-title">The Story So Far</h2>
     </header>
 
-    <ol class="timeline__list">
-        {% for entry in story_milestones reversed %}
-        <li class="timeline__item timeline__item--{{ entry.event_type|lower }}" data-reveal>
-            <div class="timeline__marker"></div>
-            <div class="timeline__content">
-                <span class="timeline__type">{{ entry.get_event_type_display }}</span>
-                <span class="timeline__date">
-                    {{ entry.date|date:"M Y" }}{% if entry.end_date %} &ndash; {{ entry.end_date|date:"M Y" }}{% elif entry.event_type == 'Experience' or entry.event_type == 'Education' %} &ndash; Present{% endif %}
-                </span>
-                <h3 class="timeline__title">{{ entry.title }}</h3>
-                {% if entry.location %}<p class="timeline__location">{{ entry.location }}</p>{% endif %}
-                <p class="timeline__description">{{ entry.description }}</p>
-            </div>
-        </li>
-        {% empty %}
-        <p>Timeline coming soon.</p>
-        {% endfor %}
-    </ol>
+    <div class="timeline__wrapper">
+        <div class="timeline__line" aria-hidden="true">
+            <div class="timeline__line-fill" data-timeline-fill></div>
+        </div>
+        <ol class="timeline__list">
+            {% for entry in story_milestones reversed %}
+            <li class="timeline__item timeline__item--{{ entry.event_type|lower }}" data-spotlight data-reveal>
+                <div class="timeline__marker"></div>
+                <div class="timeline__content">
+                    <span class="timeline__type">{{ entry.get_event_type_display }}</span>
+                    <span class="timeline__date">
+                        {{ entry.date|date:"M Y" }}{% if entry.end_date %} &ndash; {{ entry.end_date|date:"M Y" }}{% elif entry.event_type == 'Experience' or entry.event_type == 'Education' %} &ndash; Present{% endif %}
+                    </span>
+                    <h3 class="timeline__title">{{ entry.title }}</h3>
+                    {% if entry.location %}<p class="timeline__location">{{ entry.location }}</p>{% endif %}
+                    <p class="timeline__description">{{ entry.description }}</p>
+                </div>
+            </li>
+            {% empty %}
+            <p>Timeline coming soon.</p>
+            {% endfor %}
+        </ol>
+    </div>
 </section>
 
 <section class="cta-band" data-reveal>

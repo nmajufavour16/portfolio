@@ -1,14 +1,14 @@
 {% extends 'base.html' %}
 
-{% block title %}{{ about.headline|default:"Nmaju Favour — Full Stack Developer & Visual Designer" }}{% endblock %}
+{% block title %}{{ about.headline|default:"Nmaju Favour's Portfolio — Full Stack Developer & Visual Designer" }}{% endblock %}
 
 {% block content %}
 
 <!-- HERO -->
 <section class="hero">
     <div class="hero__status" data-reveal>
-        <span class="status-dot is-live"></span>
-        Available for work
+        <span class="status-dot {% if about.available_for_work %}is-live{% endif %}"></span>
+        {% if about.available_for_work %}Available for work{% else %}Currently booked{% endif %}
     </div>
 
     <div class="hero__main">
@@ -16,8 +16,8 @@
         <img src="{{ about.profile_image.url }}" alt="{{ about.name }}" class="hero__portrait" data-reveal>
         {% endif %}
 
-        <h1 class="hero__name" data-reveal>Hi, I'm {{ about.name|default:"PHAYVO" }}</h1>
-        <p class="hero__headline" data-reveal>{{ about.headline|default:"Full Stack Developer & Visual Designer." }}</p>
+        <h1 class="hero__name" data-reveal>{{ about.name|default:"Phayvo" }}</h1>
+        <p class="hero__headline" data-reveal>{{ about.headline|default:"Full Stack Developer & Visual Designer" }}</p>
 
         <div class="hero__actions" data-reveal>
             {% if about.resume_pdf %}
@@ -27,8 +27,7 @@
         </div>
 
         <div class="hero__socials" data-reveal>
-            {% if about.github_link %}<a href="{{ about.github_link }}" target="_blank" rel="noopener">GitHub</a>
-            {% endif %}
+            {% if about.github_link %}<a href="{{ about.github_link }}" target="_blank" rel="noopener">GitHub</a>{% endif %}
             {% if about.linkedin_link %}<a href="{{ about.linkedin_link }}" target="_blank"
                 rel="noopener">LinkedIn</a>{% endif %}
             {% if about.instagram_link %}<a href="{{ about.instagram_link }}" target="_blank"
@@ -41,8 +40,8 @@
         <div class="marquee__track">
             <span>Full Stack Developer</span><span class="marquee__dot">&bull;</span>
             <span>Visual Designer</span><span class="marquee__dot">&bull;</span>
-            <span>AI Product Builder</span><span class="marquee__dot">&bull;</span>
-            <span>Backend Engineer</span><span class="marquee__dot">&bull;</span>
+            <span>Product Builder</span><span class="marquee__dot">&bull;</span>
+            <span>Full Stack Developer</span><span class="marquee__dot">&bull;</span>
             <span>Visual Designer</span><span class="marquee__dot">&bull;</span>
             <span>Product Builder</span><span class="marquee__dot">&bull;</span>
         </div>
@@ -52,19 +51,19 @@
 <!-- LIVE STATS -->
 <section class="stats-bar" data-reveal>
     <div class="stat">
-        <span class="stat__value" data-counter data-target="{{ years_experience }}">3</span>+
+        <span class="stat__value" data-counter data-target="{{ years_experience }}">0</span>+
         <span class="stat__label">Years Experience</span>
     </div>
     <div class="stat">
-        <span class="stat__value" data-counter data-target="{{ total_skills }}">10</span>+
+        <span class="stat__value" data-counter data-target="{{ total_skills }}">0</span>+
         <span class="stat__label">Tech Stack Skills</span>
     </div>
     <div class="stat">
-        <span class="stat__value" data-counter data-target="{{ total_projects }}">6</span>+
+        <span class="stat__value" data-counter data-target="{{ total_projects }}">0</span>+
         <span class="stat__label">Total Projects</span>
     </div>
     <div class="stat">
-        <span class="stat__value" data-counter data-target="{{ visit_count }}">15</span>
+        <span class="stat__value" data-counter data-target="{{ visit_count }}">0</span>
         <span class="stat__label">Profile Visitors</span>
     </div>
 </section>
@@ -81,13 +80,38 @@
         <p class="contrib-graph__total">{{ contributions.totalContributions }} contributions in the last year</p>
         <div class="contrib-graph__grid">
             {% for week in contributions.weeks %}
-            <div class="contrib-graph__week">
-                {% for day in week.contributionDays %}
-                {# data-count powers CSS intensity levels — style via attribute selectors, e.g. [data-count="0"],
-                [data-count^="1"]...[data-count^="9"] #}
-                <span class="contrib-graph__day" data-count="{{ day.contributionCount }}"
-                    title="{{ day.date }}: {{ day.contributionCount }} contributions"></span>
-                {% endfor %}
+            <div class="contrib-graph">
+                <!-- Month Labels -->
+                <div class="contrib-graph__months">
+                    <span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span>
+                    <span>May</span><span>Jun</span><span>Jul</span><span>Aug</span>
+                    <span>Sep</span><span>Oct</span><span>Nov</span><span>Dec</span>
+                </div>
+            
+                <!-- The Grid -->
+                <div class="contrib-graph__grid">
+                    {% for week in contributions.weeks %}
+                    <div class="contrib-graph__week">
+                        {% for day in week.contributionDays %}
+                        <span class="contrib-graph__day" data-count="{{ day.contributionCount }}"
+                            title="{{ day.date }}: {{ day.contributionCount }} contributions"></span>
+                        {% endfor %}
+                    </div>
+                    {% endfor %}
+                </div>
+            
+                <!-- Footer & Legend -->
+                <div class="contrib-graph__footer">
+                    <div class="contrib-graph__legend">
+                        Less
+                        <span class="legend-box" data-level="0"></span>
+                        <span class="legend-box" data-level="1"></span>
+                        <span class="legend-box" data-level="2"></span>
+                        <span class="legend-box" data-level="3"></span>
+                        <span class="legend-box" data-level="4"></span>
+                        More
+                    </div>
+                </div>
             </div>
             {% endfor %}
         </div>
@@ -165,6 +189,40 @@
         </ul>
     </div>
     {% endfor %}
+</section>
+
+<!-- TECH ARSENAL -->
+<section class="tech-arsenal" data-reveal>
+    <div class="tech-arsenal__intro">
+        <span class="badge-pill">
+            <span class="badge-pill__icon" aria-hidden="true">&#10022;</span>
+            My Arsenal
+        </span>
+        <h2 class="tech-arsenal__title">Technologies I<br><span>orchestrate</span></h2>
+        <p class="section-subtitle">Building modern web experiences with cutting-edge tools and frameworks.</p>
+    </div>
+
+    {# Real content for screen readers — the marquee below repeats it visually and is hidden from AT #}
+    <ul class="sr-only">
+        {% for icon in tech_icons %}<li>{{ icon.name }}</li>{% endfor %}
+    </ul>
+
+    <div class="marquee tech-arsenal__marquee" aria-hidden="true">
+        <div class="marquee__track">
+            {% for icon in tech_icons %}
+            <div class="tech-icon-card" data-spotlight>
+                <img src="https://cdn.simpleicons.org/{{ icon.slug }}" alt="" loading="lazy">
+                <span>{{ icon.name }}</span>
+            </div>
+            {% endfor %}
+            {% for icon in tech_icons %}
+            <div class="tech-icon-card" data-spotlight>
+                <img src="https://cdn.simpleicons.org/{{ icon.slug }}" alt="" loading="lazy">
+                <span>{{ icon.name }}</span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
 </section>
 
 <!-- TESTIMONIALS -->

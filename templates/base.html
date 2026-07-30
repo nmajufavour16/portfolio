@@ -1,13 +1,11 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Nmaju Favour — Full Stack Developer &amp; Visual Designer{% endblock %}</title>
-    <meta name="description"
-        content="{% block meta_description %}Nmaju Favour's Portfolio — Full-stack Developer and Visual Designer.{% endblock %}">
+    <title>{% block title %}Phayvo — Full Stack Developer &amp; Visual Designer{% endblock %}</title>
+    <meta name="description" content="{% block meta_description %}Portfolio of Phayvo — full-stack developer and visual designer.{% endblock %}">
     <meta name="theme-color" content="#0F0F0F">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,16 +17,22 @@
 
     {% block extra_head %}{% endblock %}
 </head>
-
 <body>
+    <!-- Purely decorative — ambient vertical lines with a traveling glow, echoes udayahireexe's background motion -->
+    <div class="ambient-lines" aria-hidden="true">
+        <span class="ambient-lines__line"></span>
+        <span class="ambient-lines__line"></span>
+        <span class="ambient-lines__line"></span>
+    </div>
+
     <a href="#main-content" class="skip-link">Skip to content</a>
 
     <!-- LIQUID GLASS HEADER -->
     <header class="site-header" x-data="{ mobileOpen: false, scrolled: false }"
-        x-init="window.addEventListener('scroll', () => scrolled = window.scrollY > 40)"
-        :class="{ 'is-scrolled': scrolled }">
+             x-init="window.addEventListener('scroll', () => scrolled = window.scrollY > 40)"
+             :class="{ 'is-scrolled': scrolled }">
         <div class="site-header__inner">
-            <a href="{% url 'home' %}" class="site-header__logo">PH4YVO</a>
+            <a href="{% url 'home' %}" class="site-header__logo">Phayvo</a>
 
             <nav class="site-nav" :class="{ 'is-open': mobileOpen }" aria-label="Primary">
                 <a href="{% url 'home' %}">Home</a>
@@ -39,8 +43,9 @@
                 <a href="{% url 'contact' %}" class="site-nav__cta">Contact</a>
             </nav>
 
-            <button class="site-header__toggle" @click="mobileOpen = !mobileOpen" :aria-expanded="mobileOpen.toString()"
-                aria-label="Toggle menu" :class="{ 'is-active': mobileOpen }">
+            <button class="site-header__toggle" @click="mobileOpen = !mobileOpen"
+                    :aria-expanded="mobileOpen.toString()" aria-label="Toggle menu"
+                    :class="{ 'is-active': mobileOpen }">
                 <span></span><span></span><span></span>
             </button>
         </div>
@@ -66,14 +71,10 @@
         <div class="site-footer__inner">
             <p>&copy; {% now "Y" %} {{ global_about.name|default:"Phayvo" }}. Built with Django.</p>
             <div class="site-footer__socials">
-                {% if global_about.github_link %}<a href="{{ global_about.github_link }}" target="_blank"
-                    rel="noopener">GitHub</a>{% endif %}
-                {% if global_about.linkedin_link %}<a href="{{ global_about.linkedin_link }}" target="_blank"
-                    rel="noopener">LinkedIn</a>{% endif %}
-                {% if global_about.instagram_link %}<a href="{{ global_about.instagram_link }}" target="_blank"
-                    rel="noopener">Instagram</a>{% endif %}
-                {% if global_about.twitter_link %}<a href="{{ global_about.twitter_link }}" target="_blank"
-                    rel="noopener">Twitter</a>{% endif %}
+                {% if global_about.github_link %}<a href="{{ global_about.github_link }}" target="_blank" rel="noopener">GitHub</a>{% endif %}
+                {% if global_about.linkedin_link %}<a href="{{ global_about.linkedin_link }}" target="_blank" rel="noopener">LinkedIn</a>{% endif %}
+                {% if global_about.instagram_link %}<a href="{{ global_about.instagram_link }}" target="_blank" rel="noopener">Instagram</a>{% endif %}
+                {% if global_about.twitter_link %}<a href="{{ global_about.twitter_link }}" target="_blank" rel="noopener">Twitter</a>{% endif %}
             </div>
         </div>
     </footer>
@@ -91,5 +92,4 @@
     <script src="{% static 'main.js' %}"></script>
     {% block extra_js %}{% endblock %}
 </body>
-
 </html>

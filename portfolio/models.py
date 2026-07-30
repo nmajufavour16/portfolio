@@ -1,14 +1,23 @@
 from django.db import models
 from django.db.models.sql.constants import GET_ITERATOR_CHUNK_SIZE
+from .utils import SIMPLE_ICON_SLUGS
 
 # Create your models here.
 class Skills(models.Model):
     name = models.CharField(max_length=100)
     proficiency = models.IntegerField()
     category = models.CharField(max_length=100)
-    
+    icon_slug = models.CharField(
+        max_length=50, blank=True,
+        help_text="Simple Icons slug (e.g. 'tailwindcss', 'react'). Leave blank to auto-detect from name."
+    )
+ 
     def __str__(self):
         return self.name
+ 
+    @property
+    def resolved_icon_slug(self):
+        return self.icon_slug or SIMPLE_ICON_SLUGS.get(self.name.strip().lower(), '')
 
 class Projects(models.Model):
     class Category(models.TextChoices):
@@ -27,7 +36,6 @@ class Projects(models.Model):
     skills_used = models.ManyToManyField(Skills, related_name='projects', blank=True)
     featured = models.BooleanField(default=False)
     order = models.PositiveIntegerField(default=0, help_text='Determines display order in the portfolio')
-    created_at = models.DateTimeField(auto_now_add=True)
 
     github_url = models.URLField(max_length=200, blank=True, null=True)
     live_url = models.URLField(max_length=200, blank=True, null=True)
@@ -50,19 +58,22 @@ class Timeline(models.Model):
         EDUCATION = 'Education'
         EXPERIENCE = 'Experience'
         CERTIFICATION = 'Certification'
+        LEADERSHIP = 'Leadership'
         
+
     event_type = models.CharField(max_length=50, choices=EventType.choices, default=EventType.EXPERIENCE)
     title = models.CharField(max_length=100)
     description = models.CharField(max_length=200)
     date = models.DateField()
+    end_date = models.DateField(null=True, blank=True, help_text="Leave blank if ongoing")
+ 
+    credential_url = models.URLField(blank=True, null=True) 
     location = models.CharField(max_length=100)
-    
-    credential_url = models.URLField(max_length=200, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    
+ 
     class Meta:
         ordering = ['-date']
-    
+ 
     def __str__(self):
         return self.title
     
@@ -96,7 +107,7 @@ class Testimonials(models.Model):
 class BlogPost(models.Model):
     title = models.CharField(max_length=200)
     slug = models.SlugField(unique=True, help_text="URL friendly name(e.g., how-i-built-waityr)")
-    cover_image = models.ImageField(upload_to='media/covers/', blank=True, null=True)
+    cover_image = models.ImageField(upload_to='covers/', blank=True, null=True)
     excerpt = models.CharField(max_length=200, blank=True, null=True)
     content = models.TextField()
     
@@ -105,7 +116,7 @@ class BlogPost(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     
     class Meta:
-        ordering = ['created_at']
+        ordering = ['-created_at']
         
     def __str__(self):
         return self.title
@@ -119,6 +130,8 @@ class AboutMe(models.Model):
     name = models.CharField(max_length=100, default='Phayvo')
     headline = models.CharField(max_length=200, help_text='Full Stack Developer and Visual Designer')
     bio = models.TextField()
+    available_for_work = models.BooleanField(default=True)
+
     profile_image = models.ImageField(upload_to='profile/')
     resume_pdf = models.FileField(upload_to='resume/', blank=True, null=True)
     
@@ -137,9 +150,18 @@ class AboutMe(models.Model):
         return f"About: {self.name}"
 
 class ProjectImage(models.Model):
-    project = models.ForeignKey('Projects', on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='media/images/')
-    description = models.TextField(blank=True, null=True)
-    
+    class Stage(models.TextChoices):
+        PROCESS = 'PROC', 'Process'
+        FINAL = 'FIN', 'Final'
+ 
+    project = models.ForeignKey(Projects, related_name='gallery', on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='projects/gallery/')
+    stage = models.CharField(max_length=4, choices=Stage.choices, default=Stage.FINAL)
+    caption = models.CharField(max_length=150, blank=True)
+    order = models.PositiveIntegerField(default=0)
+ 
+    class Meta:
+        ordering = ['stage', 'order']
+ 
     def __str__(self):
-        return self.image.name
+        return f"{self.project.title} — {self.get_stage_display()} #{self.order}"
