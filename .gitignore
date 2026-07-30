@@ -9,3 +9,5 @@ static/
 
 staticfiles/
 static_root/
+
+db.sqlite3
