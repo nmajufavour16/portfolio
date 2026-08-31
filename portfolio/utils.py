@@ -283,7 +283,7 @@ def get_visit_count():
     except ValueError:
         cache.set(key, 1, timeout=None)
         return 1
-    
+
 def group_skills_by_category(skills_queryset):
     grouped = {}
     for skill in skills_queryset:
@@ -302,8 +302,8 @@ SIMPLE_ICON_SLUGS = {
     'python': 'python',
     'html': 'html5',
     'html5': 'html5',
-    'css': 'css3',
-    'css3': 'css3',
+    'css': 'css',
+    'css3': 'css',
     'tailwind css': 'tailwindcss',
     'tailwindcss': 'tailwindcss',
     'django': 'django',
@@ -317,9 +317,12 @@ SIMPLE_ICON_SLUGS = {
     'figma': 'figma',
     'canva': 'canva',
     'vercel': 'vercel',
+    'mongo db': 'mongodb',
+    'mongodb': 'mongodb',
+    'pg admin': 'postgresql',
+    'pgadmin': 'postgresql',
 }
- 
- 
+
 def get_tech_icons(skills_queryset):
     icons = []
     for skill in skills_queryset:

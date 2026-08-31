@@ -30,7 +30,7 @@
         <div class="work-lane__capabilities" aria-label="Development capabilities">
             <span>Frontend</span><span>MERN / Full-stack</span><span>Backend systems</span>
         </div>
-        <a href="{% url 'project_list_dev' %}" class="work-lane__all">All development work ↗</a>
+        <a href="{% url 'project_list_dev' %}" class="btn btn--primary">All development work ↗</a>
     </header>
     <div class="project-grid">
         {% for project in development_projects|slice:':4' %}
@@ -66,7 +66,7 @@
         <div class="work-lane__capabilities" aria-label="Design capabilities">
             <span>UI / UX</span><span>Brand identity</span><span>Visual systems</span>
         </div>
-        <a href="{% url 'project_list_design' %}" class="work-lane__all">All design work ↗</a>
+        <a href="{% url 'project_list_design' %}" class="btn btn--primary">All design work ↗</a>
     </header>
     <div class="project-grid project-grid--design-lane">
         {% for project in design_projects|slice:':4' %}

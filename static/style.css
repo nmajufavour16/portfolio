@@ -408,7 +408,7 @@ main#main-content>section+section {
     letter-spacing: -0.03em;
 }
 
-.site-header__logo::after {
+.site-header__logo span::after {
     content: '.';
     color: var(--accent);
 }
@@ -858,8 +858,8 @@ html[data-theme='light'] .hero__name {
     gap: 1.25rem;
 }
 
-.section-header__links a,
-.section-header>a {
+.section-header__links a:not(.btn),
+.section-header>a:not(.btn) {
     margin-left: auto;
     font-size: 0.9rem;
     font-weight: 500;
@@ -867,29 +867,36 @@ html[data-theme='light'] .hero__name {
     transition: color 0.2s ease;
 }
 
-.section-header__links a:hover,
-.section-header>a:hover {
+.section-header__links a:not(.btn):hover,
+.section-header>a:not(.btn):hover {
     color: var(--accent);
 }
 
-/* Space out the months properly */
+/* Fix the grid spacing */
+.contrib-graph__scroll {
+    overflow-x: auto;
+    padding-bottom: 10px;
+}
+
+.contrib-graph__wrapper {
+    width: max-content;
+    margin: 0 auto;
+}
+
 .contrib-graph__months {
     display: flex;
     justify-content: space-between;
-    width: 100%;
-    min-width: 700px;
-    /* Ensures it stretches over the scrollable grid */
+    width: max-content;
+    min-width: 100%;
     margin-bottom: 8px;
     color: #8b949e;
     font-size: 12px;
 }
 
-/* Fix the grid spacing */
 .contrib-graph__grid {
     display: flex;
     gap: 3px;
-    overflow-x: auto;
-    padding-bottom: 10px;
+    width: max-content;
 }
 
 .contrib-graph__week {
@@ -1091,8 +1098,9 @@ html[data-theme='light'] .hero__name {
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
     background: var(--surface);
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem 1.5rem;
     width: 100%;
 }
 
@@ -2057,6 +2065,10 @@ html[data-theme='light'] .hero__name {
         grid-template-columns: 1fr;
     }
 
+    .proficiency-list {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
 
 
     .section-header {
@@ -2080,6 +2092,9 @@ html[data-theme='light'] .hero__name {
 }
 
 @media (max-width: 560px) {
+    .proficiency-list {
+        grid-template-columns: 1fr;
+    }
     .stats-bar {
         grid-template-columns: 1fr 1fr;
     }
@@ -2866,6 +2881,7 @@ html[data-theme='light'] .hero-card-lens-wrapper[data-theme='dark'] .hero__name 
 .work-index__hero {
     display: grid;
     grid-template-columns: minmax(150px, 0.55fr) minmax(0, 1.75fr);
+    align-items: start;
     gap: clamp(2rem, 7vw, 6rem);
     padding: clamp(2rem, 7vw, 6rem) 0 clamp(3rem, 8vw, 7rem);
 }
@@ -2882,6 +2898,7 @@ html[data-theme='light'] .hero-card-lens-wrapper[data-theme='dark'] .hero__name 
 }
 
 .work-index__hero h1 {
+    margin: 0;
     font-size: clamp(3rem, 8vw, 7.25rem);
     line-height: 0.9;
     letter-spacing: -0.065em;

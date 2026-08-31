@@ -140,18 +140,20 @@
             </a>
         </div>
         <div class="contrib-graph__scroll" tabindex="0" aria-label="GitHub contribution calendar">
-            <div class="contrib-graph__months" aria-hidden="true">
-                {% for month in contributions.monthLabels %}<span>{{ month }}</span>{% endfor %}
-            </div>
-            <div class="contrib-graph__grid">
-                {% for week in contributions.weeks %}
-                <div class="contrib-graph__week">
-                    {% for day in week.contributionDays %}
-                    <span class="contrib-graph__day" data-count="{{ day.contributionCount }}" data-level="{{ day.contributionLevel|lower }}"
-                          title="{{ day.date }}: {{ day.contributionCount }} contributions"></span>
+            <div class="contrib-graph__wrapper">
+                <div class="contrib-graph__months" aria-hidden="true">
+                    {% for month in contributions.monthLabels %}<span>{{ month }}</span>{% endfor %}
+                </div>
+                <div class="contrib-graph__grid">
+                    {% for week in contributions.weeks %}
+                    <div class="contrib-graph__week">
+                        {% for day in week.contributionDays %}
+                        <span class="contrib-graph__day" data-count="{{ day.contributionCount }}" data-level="{{ day.contributionLevel|lower }}"
+                              title="{{ day.date }}: {{ day.contributionCount }} contributions"></span>
+                        {% endfor %}
+                    </div>
                     {% endfor %}
                 </div>
-                {% endfor %}
             </div>
         </div>
         <div class="contrib-graph__footer">
@@ -174,23 +176,7 @@
     </div>
     {% endif %}
 
-    {% if recent_activity %}
-    <div class="github-feed" data-spotlight>
-        <h3 class="github-feed__title">Recent Activity</h3>
-        <ul class="github-feed__list">
-            {% for event in recent_activity %}
-            <li class="github-feed__item">
-                <span class="github-feed__badge github-feed__badge--{{ event.badge }}"></span>
-                <div class="github-feed__content">
-                    <span class="github-feed__message">{{ event.message }}</span>
-                    <a href="{{ event.url }}" target="_blank" rel="noopener" class="github-feed__repo">{{ event.repo }}</a>
-                    <span class="github-feed__time">{{ event.created_at|timesince }} ago</span>
-                </div>
-            </li>
-            {% endfor %}
-        </ul>
-    </div>
-    {% endif %}
+
 </section>
 
 <!-- FEATURED WORK -->
@@ -198,9 +184,9 @@
     <header class="section-header">
         <span class="section-index">02</span>
         <h2 class="section-title">Featured Work</h2>
-        <div class="section-header__links">
-            <a href="{% url 'project_list_dev' %}">Development &rarr;</a>
-            <a href="{% url 'project_list_design' %}">Design &rarr;</a>
+        <div class="section-header__links" style="display:flex; gap:10px;">
+            <a href="{% url 'project_list_dev' %}" class="btn btn--primary">Development &rarr;</a>
+            <a href="{% url 'project_list_design' %}" class="btn btn--primary">Design &rarr;</a>
         </div>
     </header>
 
@@ -237,16 +223,39 @@
     </header>
 
     <div class="expertise__tabs" role="tablist">
+        <button role="tab" @click="active = 0"
+            :class="{ 'is-active': active === 0 }" class="expertise__tab">
+            All
+        </button>
         {% for category, skills in expertise_groups.items %}
-        <button role="tab" @click="active = {{ forloop.counter0 }}"
-            :class="{ 'is-active': active === {{ forloop.counter0 }} }" class="expertise__tab">
+        <button role="tab" @click="active = {{ forloop.counter }}"
+            :class="{ 'is-active': active === {{ forloop.counter }} }" class="expertise__tab">
             {{ category }}
         </button>
         {% endfor %}
     </div>
 
+    <!-- The "All" panel -->
+    <div class="expertise__panel" x-show="active === 0" x-cloak>
+        <ul class="proficiency-list">
+            {% for category, skills in expertise_groups.items %}
+                {% for skill in skills %}
+                <li class="proficiency-item">
+                    <div class="proficiency-item__label">
+                        <span>{{ skill.name }}</span>
+                        <span>{{ skill.proficiency }}%</span>
+                    </div>
+                    <div class="proficiency-item__track">
+                        <div class="proficiency-item__fill" data-progress="{{ skill.proficiency }}"></div>
+                    </div>
+                </li>
+                {% endfor %}
+            {% endfor %}
+        </ul>
+    </div>
+
     {% for category, skills in expertise_groups.items %}
-    <div class="expertise__panel" x-show="active === {{ forloop.counter0 }}" x-cloak>
+    <div class="expertise__panel" x-show="active === {{ forloop.counter }}" x-cloak>
         <ul class="proficiency-list">
             {% for skill in skills %}
             <li class="proficiency-item">
@@ -321,7 +330,7 @@
     <header class="section-header">
         <span class="section-index">05</span>
         <h2 class="section-title">From the blog</h2>
-        <a href="{% url 'blog' %}">View all &rarr;</a>
+        <a href="{% url 'blog' %}" class="btn btn--primary">View all &rarr;</a>
     </header>
 
     <div class="blog-preview__grid">
