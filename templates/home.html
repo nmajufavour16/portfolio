@@ -13,6 +13,7 @@
         <span class="nav-border-glow" aria-hidden="true"></span>
         <div class="hero-card__portrait-pane">
             <img src="{% static 'images/logo.png' %}" alt="{{ about.name|default:'Phayvo' }}" class="hero__portrait">
+            <p class="hero__headline">{{ about.headline|default:"Full-Stack Engineer & Technical Designer" }}</p>
         </div>
 
         <div class="hero-card__content">
@@ -20,17 +21,15 @@
                 <span>Portfolio</span>
                 <span class="hero__status">
                     <span class="status-dot {% if about.available_for_work %}is-live{% endif %}"></span>
-                    {% if about.available_for_work %}Available{% else %}Currently booked{% endif %}
+                    {% if about.available_for_work %}Available for work{% else %}Currently booked{% endif %}
                 </span>
             </div>
 
             <div class="hero-card__name-row">
                 <h1 class="hero__name">{{ about.name|default:"Nmaju Favour" }}</h1>
-                <span class="hero-card__alias">Phayvo</span>
             </div>
 
             <div class="hero-card__details">
-                <p class="hero__headline">{{ about.headline|default:"Full-Stack Engineer & Technical Designer" }}</p>
                 <p class="hero-card__bio">{{ about.bio|default:"Building dependable product systems and sharp, minimalist interfaces from Port Harcourt, Nigeria."|truncatewords:34 }}</p>
 
                 <div class="hero-card__footer-actions">
@@ -49,7 +48,8 @@
 
                 {% if spotify %}
                 <a class="listening-strip" href="{{ spotify.spotify_url|default:'https://open.spotify.com/' }}"
-                   target="_blank" rel="noopener" aria-label="Open {{ spotify.title }} on Spotify">
+                   target="_blank" rel="noopener" aria-label="Open {{ spotify.title }} on Spotify"
+                   hx-get="{% url 'spotify_status' %}" hx-trigger="every 30s" hx-swap="outerHTML">
                     {% if spotify.image_url %}<img src="{{ spotify.image_url }}" alt="" class="listening-strip__cover">{% endif %}
                     <span class="listening-strip__copy">
                         <span class="listening-strip__state">
@@ -65,24 +65,46 @@
             </div>
         </div>
     </article>
+
+    <!-- rotating tagline ticker, echoes Rameshwar's "Next.js Expert • Product Builder •..." -->
+    <div class="marquee hero__ticker" aria-hidden="true">
+        <div class="marquee__track">
+            <span>Full Stack Developer</span><span class="marquee__dot">&bull;</span>
+            <span>Visual Designer</span><span class="marquee__dot">&bull;</span>
+            <span>Product Builder</span><span class="marquee__dot">&bull;</span>
+            <span>Backend Engineer</span><span class="marquee__dot">&bull;</span>
+            <span>Full Stack Developer</span><span class="marquee__dot">&bull;</span>
+            <span>Visual Designer</span><span class="marquee__dot">&bull;</span>
+            <span>Product Builder</span><span class="marquee__dot">&bull;</span>
+            <span>Backend Engineer</span><span class="marquee__dot">&bull;</span>
+        </div>
+    </div>
 </section>
 
 <!-- LIVE STATS -->
 <section class="stats-bar" data-reveal>
     <div class="stat">
-        <span class="stat__value" data-counter data-target="{{ years_experience }}">0</span>+
+        <div class="stat__number">
+            <span class="stat__value" data-counter data-target="{{ years_experience }}">0</span>+
+        </div>
         <span class="stat__label">Years Experience</span>
     </div>
     <div class="stat">
-        <span class="stat__value" data-counter data-target="{{ total_skills }}">0</span>+
+        <div class="stat__number">
+            <span class="stat__value" data-counter data-target="{{ total_skills }}">0</span>+
+        </div>
         <span class="stat__label">Tech Stack Skills</span>
     </div>
     <div class="stat">
-        <span class="stat__value" data-counter data-target="{{ total_projects }}">0</span>+
+        <div class="stat__number">
+            <span class="stat__value" data-counter data-target="{{ total_projects }}">0</span>+
+        </div>
         <span class="stat__label">Total Projects</span>
     </div>
     <div class="stat">
-        <span class="stat__value" data-counter data-target="{{ visit_count }}">0</span>
+        <div class="stat__number">
+            <span class="stat__value" data-counter data-target="{{ visit_count }}">0</span>
+        </div>
         <span class="stat__label">Profile Visitors</span>
     </div>
 </section>
@@ -100,6 +122,14 @@
             <div>
                 <span class="contrib-graph__metric">{{ contributions.totalContributions }}</span>
                 <span class="contrib-graph__label">contributions</span>
+            </div>
+            <div>
+                <span class="contrib-graph__metric">{{ contributions.totalCommits }}</span>
+                <span class="contrib-graph__label">commits</span>
+            </div>
+            <div>
+                <span class="contrib-graph__metric">{{ contributions.totalRepos }}</span>
+                <span class="contrib-graph__label">repos</span>
             </div>
             <div>
                 <span class="contrib-graph__metric">{{ contributions.currentStreak }}</span>
@@ -141,6 +171,24 @@
     <div class="contrib-graph__empty">
         <p>GitHub activity could not be refreshed right now.</p>
         <a href="https://github.com/{{ github_username }}" target="_blank" rel="noopener">View @{{ github_username }} on GitHub ↗</a>
+    </div>
+    {% endif %}
+
+    {% if recent_activity %}
+    <div class="github-feed" data-spotlight>
+        <h3 class="github-feed__title">Recent Activity</h3>
+        <ul class="github-feed__list">
+            {% for event in recent_activity %}
+            <li class="github-feed__item">
+                <span class="github-feed__badge github-feed__badge--{{ event.badge }}"></span>
+                <div class="github-feed__content">
+                    <span class="github-feed__message">{{ event.message }}</span>
+                    <a href="{{ event.url }}" target="_blank" rel="noopener" class="github-feed__repo">{{ event.repo }}</a>
+                    <span class="github-feed__time">{{ event.created_at|timesince }} ago</span>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
     </div>
     {% endif %}
 </section>

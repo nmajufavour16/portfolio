@@ -15,4 +15,5 @@ urlpatterns = [
     path('skills/', views.skills, name='skills'),
     path('resume/', views.resume, name='resume'),
     path('error_404/', views.error_404, name='error_404'),
+    path('spotify_status/', views.spotify_status, name='spotify_status'),
 ]

@@ -52,6 +52,11 @@ document.addEventListener('DOMContentLoaded', () => {
         applyTheme(root.dataset.theme === 'light' ? 'dark' : 'light', true);
     });
 
+    const menuToggle = document.querySelector('.site-header__toggle');
+    menuToggle?.addEventListener('click', () => {
+        playThemeClick();
+    });
+
     const techVerb = document.querySelector('[data-tech-verb]');
     if (techVerb) {
         const verbs = ['engineer', 'deploy', 'design', 'orchestrate'];
@@ -81,12 +86,49 @@ document.addEventListener('DOMContentLoaded', () => {
     // direction of travel. It stays compositor-friendly and is disabled for
     // touch and reduced-motion users.
     const hero = document.querySelector('.hero');
-    const heroLens = document.querySelector('[data-hero-lens]');
+    const heroCard = document.querySelector('.hero-card');
     const canUseLens = window.matchMedia('(hover: hover) and (pointer: fine)').matches
         && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    if (hero && heroLens && canUseLens) {
-        let frame = null;
+    if (hero && heroCard && canUseLens) {
+        // Create reverse-theme clone wrapper
+        const cloneWrapper = document.createElement('div');
+        cloneWrapper.className = 'hero-card-lens-wrapper';
+        cloneWrapper.setAttribute('aria-hidden', 'true');
+
+        const reverseContainer = document.createElement('div');
+        reverseContainer.className = 'lens-reverse-container';
+        
+        const clone = heroCard.cloneNode(true);
+        const glow = clone.querySelector('.nav-border-glow');
+        if (glow) glow.remove();
+        
+        // Clear all GSAP inline styles from the clone to prevent alignment issues
+        clone.removeAttribute('style');
+        clone.removeAttribute('data-reveal');
+        clone.querySelectorAll('[data-reveal], [style]').forEach(el => {
+            el.removeAttribute('data-reveal');
+            el.removeAttribute('style');
+        });
+        
+        reverseContainer.appendChild(clone);
+        cloneWrapper.appendChild(reverseContainer);
+        hero.appendChild(cloneWrapper);
+        
+        // Remove old orb
+        const oldOrb = document.querySelector('[data-hero-lens]');
+        if (oldOrb) oldOrb.remove();
+
+        const updateLensTheme = () => {
+            const currentTheme = document.documentElement.dataset.theme;
+            cloneWrapper.dataset.theme = currentTheme === 'light' ? 'dark' : 'light';
+        };
+        updateLensTheme();
+        // Hook into theme toggle
+        themeToggle?.addEventListener('click', () => {
+            setTimeout(updateLensTheme, 10);
+        });
+
         let targetX = hero.clientWidth / 2;
         let targetY = hero.clientHeight / 2;
         let currentX = targetX;
@@ -99,46 +141,46 @@ document.addEventListener('DOMContentLoaded', () => {
             currentX += deltaX * 0.13;
             currentY += deltaY * 0.13;
 
-            const speed = Math.min(Math.hypot(deltaX, deltaY), 55);
-            const angle = Math.max(-9, Math.min(9, deltaX * 0.16));
-            const stretch = 1 + speed * 0.0045;
-            const squash = Math.max(0.84, 1 - speed * 0.0025);
+            const velocity = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+            const squash = Math.max(0.6, 1 - velocity * 0.004);
+            const stretch = Math.min(1.4, 1 + velocity * 0.004);
+            const angle = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
 
-            heroLens.style.setProperty('--lens-x', `${currentX}px`);
-            heroLens.style.setProperty('--lens-y', `${currentY}px`);
-            heroLens.style.setProperty('--fluid-angle', `${angle}deg`);
-            heroLens.style.setProperty('--fluid-stretch', stretch.toFixed(3));
-            heroLens.style.setProperty('--fluid-squash', squash.toFixed(3));
+            cloneWrapper.style.setProperty('--lens-x', `${currentX}px`);
+            cloneWrapper.style.setProperty('--lens-y', `${currentY}px`);
+            cloneWrapper.style.setProperty('--fluid-angle', `${angle}deg`);
+            cloneWrapper.style.setProperty('--fluid-stretch', stretch.toFixed(3));
+            cloneWrapper.style.setProperty('--fluid-squash', squash.toFixed(3));
+            
+            cloneWrapper.style.setProperty('--inv-angle', `${-angle}deg`);
+            cloneWrapper.style.setProperty('--inv-stretch', (1 / stretch).toFixed(3));
+            cloneWrapper.style.setProperty('--inv-squash', (1 / squash).toFixed(3));
 
-            if (active || Math.abs(deltaX) > 0.1 || Math.abs(deltaY) > 0.1) {
-                frame = requestAnimationFrame(animateFluidCursor);
-            } else {
-                frame = null;
-            }
+            cloneWrapper.style.opacity = active ? 1 : 0;
+
+            requestAnimationFrame(animateFluidCursor);
         };
 
-        hero.addEventListener('pointerenter', (event) => {
-            const bounds = hero.getBoundingClientRect();
-            targetX = event.clientX - bounds.left;
-            targetY = event.clientY - bounds.top;
-            currentX = targetX;
-            currentY = targetY;
+        let idleTimeout;
+        hero.addEventListener('mousemove', (e) => {
             active = true;
-            hero.dataset.cursorActive = 'true';
-            if (!frame) frame = requestAnimationFrame(animateFluidCursor);
-        });
-
-        hero.addEventListener('pointermove', (event) => {
-            const bounds = hero.getBoundingClientRect();
-            targetX = event.clientX - bounds.left;
-            targetY = event.clientY - bounds.top;
-            if (!frame) frame = requestAnimationFrame(animateFluidCursor);
+            const rect = hero.getBoundingClientRect();
+            targetX = e.clientX - rect.left;
+            targetY = e.clientY - rect.top;
+            
+            clearTimeout(idleTimeout);
+            idleTimeout = setTimeout(() => {
+                active = false;
+            }, 1000);
         }, { passive: true });
 
         hero.addEventListener('pointerleave', () => {
             active = false;
+            clearTimeout(idleTimeout);
             hero.dataset.cursorActive = 'false';
         });
+        
+        requestAnimationFrame(animateFluidCursor);
     }
 
     const hasGsap = window.gsap && window.ScrollTrigger;

@@ -8,6 +8,7 @@ from .models import AboutMe, Contact, Skills, Projects, BlogPost, Testimonials, 
 from .forms import ContactForm
 from .utils import (
     get_github_contributions,
+    get_github_activity,
     get_spotify_listening,
     get_tech_icons,
     get_visit_count,
@@ -27,6 +28,7 @@ def home(request):
         'recent_posts': BlogPost.objects.filter(is_published=True)[:3],
         'testimonials': Testimonials.objects.all(),
         'contributions': get_github_contributions(github_username),
+        'recent_activity': get_github_activity(github_username),
         'spotify': get_spotify_listening(),
         'github_username': github_username,
         'expertise_groups': group_skills_by_category(skills),
@@ -133,8 +135,10 @@ def testimonials(request):
     return render(request, context)
 
 def resume(request):
-    context = {'resume' : resume}
-    return render(request, context)
+    return render(request, 'resume.html')
 
 def error_404(request):
     return render(request, 'error_404.html')
+
+def spotify_status(request):
+    return render(request, 'partials/spotify_status.html', {'spotify': get_spotify_listening()})

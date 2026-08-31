@@ -1,0 +1,19 @@
+{% if spotify %}
+<a class="listening-strip" href="{{ spotify.spotify_url|default:'https://open.spotify.com/' }}"
+   target="_blank" rel="noopener" aria-label="Open {{ spotify.title }} on Spotify"
+   hx-get="{% url 'spotify_status' %}" hx-trigger="every 30s" hx-swap="outerHTML">
+    {% if spotify.image_url %}<img src="{{ spotify.image_url }}" alt="" class="listening-strip__cover">{% endif %}
+    <span class="listening-strip__copy">
+        <span class="listening-strip__state">
+            <span class="listening-strip__signal {% if spotify.is_playing %}is-playing{% endif %}" aria-hidden="true"><i></i><i></i><i></i></span>
+            {% if spotify.is_playing %}Currently listening{% else %}Last listened{% endif %}
+        </span>
+        <strong>{{ spotify.title }}</strong>
+        <span>{{ spotify.artist }}</span>
+    </span>
+    <span class="listening-strip__source">Spotify ↗</span>
+</a>
+{% else %}
+<!-- Placeholder when no spotify stats exist to ensure HTMX continues polling if they become active -->
+<div class="listening-strip" style="display: none;" hx-get="{% url 'spotify_status' %}" hx-trigger="every 30s" hx-swap="outerHTML"></div>
+{% endif %}
