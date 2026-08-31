@@ -2899,9 +2899,9 @@ html[data-theme='light'] .hero-card-lens-wrapper[data-theme='dark'] .hero__name 
 
 .work-index__hero h1 {
     margin: 0;
-    font-size: clamp(3rem, 8vw, 7.25rem);
-    line-height: 0.9;
-    letter-spacing: -0.065em;
+    font-size: clamp(2rem, 4vw, 3.25rem);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
 }
 
 .work-index__hero h1 span {
