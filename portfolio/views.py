@@ -1,35 +1,60 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.core.paginator import Paginator
+from django.utils import timezone
 
 
 from .models import AboutMe, Contact, Skills, Projects, BlogPost, Testimonials, Timeline, ProjectImage
 from .forms import ContactForm
-from .utils import get_github_contributions
+from .utils import (
+    get_github_contributions,
+    get_spotify_listening,
+    get_tech_icons,
+    get_visit_count,
+    group_skills_by_category,
+)
 
 def home(request):
     about = AboutMe.objects.first()
-    projects = Projects.objects.all()
+    projects = Projects.objects.prefetch_related('skills_used', 'gallery')
+    skills = Skills.objects.all().order_by('category', '-proficiency')
+    first_milestone = Timeline.objects.order_by('date').first()
+    github_username = 'nmajufavour16'
     context = {
         'about': about,
         'projects' : projects,
-        'featured_projects': Projects.objects.filter(featured=True)[:4],
-        'recents_posts': BlogPost.objects.filter(is_published=True)[:3],
+        'featured_projects': projects.filter(featured=True)[:4],
+        'recent_posts': BlogPost.objects.filter(is_published=True)[:3],
         'testimonials': Testimonials.objects.all(),
-        'contributions': (
-            get_github_contributions(about.github_username)
-            if about and about.github_username 
-            else None
+        'contributions': get_github_contributions(github_username),
+        'spotify': get_spotify_listening(),
+        'github_username': github_username,
+        'expertise_groups': group_skills_by_category(skills),
+        'tech_icons': get_tech_icons(skills),
+        'total_skills': skills.count(),
+        'total_projects': projects.count(),
+        'visit_count': get_visit_count(),
+        'years_experience': (
+            max(0, timezone.now().year - first_milestone.date.year)
+            if first_milestone else 0
         ),
     }
     return render(request, 'home.html', context)
+
+
+def projects(request):
+    all_projects = Projects.objects.prefetch_related('skills_used', 'gallery')
+    return render(request, 'projects.html', {
+        'development_projects': all_projects.exclude(category=Projects.Category.DESIGN),
+        'design_projects': all_projects.filter(category=Projects.Category.DESIGN),
+    })
 
 def project_list_dev(request):
     projects = Projects.objects.exclude(category=Projects.Category.DESIGN)
     
     tech = request.GET.get('tech')
     if tech:
-        projects = projects.filter(skills_name__name=tech)
+        projects = projects.filter(skills_used__name=tech)
     
     context = {
         'projects': projects.distinct(),
@@ -66,7 +91,7 @@ def project_detail(request, slug):
     return render(request, 'project_detail_dev.html', {'project': project})
 
 def blog_list(request):
-    posts = BlogPost.objects.filter(is_published=True).order_by('-published_date')
+    posts = BlogPost.objects.filter(is_published=True).order_by('-created_at')
     paginator = Paginator(posts, 6)
     page_obj = paginator.get_page(request.GET.get('page'))
     return render(request, 'blog.html', {'page_obj': page_obj})
@@ -78,8 +103,8 @@ def blog_detail(request, slug):
 def about(request):
     context = {
         'about': AboutMe.objects.first(),
-        'certifications': Timeline.objects.filter(category=Timeline.Category.CERTIFICATION),
-        'story_milestones': Timeline.objects.exclude(category=Timeline.Category.CERTIFICATION),
+        'certifications': Timeline.objects.filter(event_type=Timeline.EventType.CERTIFICATION),
+        'story_milestones': Timeline.objects.exclude(event_type=Timeline.EventType.CERTIFICATION),
     }
     return render(request, 'about.html', context)
 
@@ -113,5 +138,3 @@ def resume(request):
 
 def error_404(request):
     return render(request, 'error_404.html')
-
- 

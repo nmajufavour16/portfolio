@@ -6,46 +6,70 @@
 
 <!-- HERO -->
 <section class="hero">
-    <div class="hero__status" data-reveal>
-        <span class="status-dot {% if about.available_for_work %}is-live{% endif %}"></span>
-        {% if about.available_for_work %}Available for work{% else %}Currently booked{% endif %}
-    </div>
+    <div class="hero__cursor-orb" data-hero-lens aria-hidden="true"></div>
 
-    <div class="hero__main">
-        {% if about.profile_image %}
-        <img src="{{ about.profile_image.url }}" alt="{{ about.name }}" class="hero__portrait" data-reveal>
-        {% endif %}
-
-        <h1 class="hero__name" data-reveal>{{ about.name|default:"Phayvo" }}</h1>
-        <p class="hero__headline" data-reveal>{{ about.headline|default:"Full Stack Developer & Visual Designer" }}</p>
-
-        <div class="hero__actions" data-reveal>
-            {% if about.resume_pdf %}
-            <a href="{{ about.resume_pdf.url }}" class="btn btn--primary" target="_blank">View Resume</a>
+    <article class="hero-card" data-reveal>
+        <span class="edge-glow-left" style="left: -1px;" aria-hidden="true"></span>
+        <span class="edge-glow-right" style="right: -1px;" aria-hidden="true"></span>
+        <div class="hero-card__portrait-pane">
+            {% if about.profile_image %}
+            <img src="{{ about.profile_image.url }}" alt="{{ about.name }}" class="hero__portrait">
+            {% else %}
+            <span class="hero-card__monogram" aria-hidden="true">PF</span>
             {% endif %}
-            <a href="{% url 'contact' %}" class="btn btn--ghost">Get in touch</a>
         </div>
 
-        <div class="hero__socials" data-reveal>
-            {% if about.github_link %}<a href="{{ about.github_link }}" target="_blank" rel="noopener">GitHub</a>{% endif %}
-            {% if about.linkedin_link %}<a href="{{ about.linkedin_link }}" target="_blank"
-                rel="noopener">LinkedIn</a>{% endif %}
-            {% if about.instagram_link %}<a href="{{ about.instagram_link }}" target="_blank"
-                rel="noopener">Instagram</a>{% endif %}
-        </div>
-    </div>
+        <div class="hero-card__content">
+            <div class="hero-card__label">
+                <span>Portfolio</span>
+                <span class="hero__status">
+                    <span class="status-dot {% if about.available_for_work %}is-live{% endif %}"></span>
+                    {% if about.available_for_work %}Available{% else %}Currently booked{% endif %}
+                </span>
+            </div>
 
-    <!-- rotating tagline ticker, echoes Rameshwar's "Next.js Expert • Product Builder •..." -->
-    <div class="marquee hero__ticker" aria-hidden="true">
-        <div class="marquee__track">
-            <span>Full Stack Developer</span><span class="marquee__dot">&bull;</span>
-            <span>Visual Designer</span><span class="marquee__dot">&bull;</span>
-            <span>Product Builder</span><span class="marquee__dot">&bull;</span>
-            <span>Full Stack Developer</span><span class="marquee__dot">&bull;</span>
-            <span>Visual Designer</span><span class="marquee__dot">&bull;</span>
-            <span>Product Builder</span><span class="marquee__dot">&bull;</span>
+            <div class="hero-card__name-row">
+                <h1 class="hero__name">{{ about.name|default:"Nmaju Favour" }}</h1>
+                <span class="hero-card__alias">Phayvo</span>
+            </div>
+
+            <div class="hero-card__details">
+                <p class="hero__headline">{{ about.headline|default:"Full-Stack Engineer & Technical Designer" }}</p>
+                <p class="hero-card__bio">{{ about.bio|default:"Building dependable product systems and sharp, minimalist interfaces from Port Harcourt, Nigeria."|truncatewords:34 }}</p>
+
+                <div class="hero-card__footer-actions">
+                    <div class="hero__actions">
+                        <a href="{% url 'contact' %}" class="btn btn--primary">Contact me</a>
+                        {% if about.resume_pdf %}
+                        <a href="{{ about.resume_pdf.url }}" class="btn btn--ghost" target="_blank">View resume</a>
+                        {% endif %}
+                    </div>
+
+                    <div class="hero__socials">
+                        {% if about.github_link %}<a href="{{ about.github_link }}" target="_blank" rel="noopener">GitHub</a>{% endif %}
+                        {% if about.linkedin_link %}<a href="{{ about.linkedin_link }}" target="_blank" rel="noopener">LinkedIn</a>{% endif %}
+                        {% if about.instagram_link %}<a href="{{ about.instagram_link }}" target="_blank" rel="noopener">Instagram</a>{% endif %}
+                    </div>
+                </div>
+
+                {% if spotify %}
+                <a class="listening-strip" href="{{ spotify.spotify_url|default:'https://open.spotify.com/' }}"
+                   target="_blank" rel="noopener" aria-label="Open {{ spotify.title }} on Spotify">
+                    {% if spotify.image_url %}<img src="{{ spotify.image_url }}" alt="" class="listening-strip__cover">{% endif %}
+                    <span class="listening-strip__copy">
+                        <span class="listening-strip__state">
+                            <span class="listening-strip__signal {% if spotify.is_playing %}is-playing{% endif %}" aria-hidden="true"><i></i><i></i><i></i></span>
+                            {% if spotify.is_playing %}Currently listening{% else %}Last listened{% endif %}
+                        </span>
+                        <strong>{{ spotify.title }}</strong>
+                        <span>{{ spotify.artist }}</span>
+                    </span>
+                    <span class="listening-strip__source">Spotify ↗</span>
+                </a>
+                {% endif %}
+            </div>
         </div>
-    </div>
+    </article>
 </section>
 
 <!-- LIVE STATS -->
@@ -76,48 +100,53 @@
     </header>
 
     {% if contributions %}
-    <div class="contrib-graph">
-        <p class="contrib-graph__total">{{ contributions.totalContributions }} contributions in the last year</p>
-        <div class="contrib-graph__grid">
-            {% for week in contributions.weeks %}
-            <div class="contrib-graph">
-                <!-- Month Labels -->
-                <div class="contrib-graph__months">
-                    <span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span>
-                    <span>May</span><span>Jun</span><span>Jul</span><span>Aug</span>
-                    <span>Sep</span><span>Oct</span><span>Nov</span><span>Dec</span>
-                </div>
-            
-                <!-- The Grid -->
-                <div class="contrib-graph__grid">
-                    {% for week in contributions.weeks %}
-                    <div class="contrib-graph__week">
-                        {% for day in week.contributionDays %}
-                        <span class="contrib-graph__day" data-count="{{ day.contributionCount }}"
-                            title="{{ day.date }}: {{ day.contributionCount }} contributions"></span>
-                        {% endfor %}
-                    </div>
+    <div class="contrib-graph" data-spotlight>
+        <div class="contrib-graph__summary">
+            <div>
+                <span class="contrib-graph__metric">{{ contributions.totalContributions }}</span>
+                <span class="contrib-graph__label">contributions</span>
+            </div>
+            <div>
+                <span class="contrib-graph__metric">{{ contributions.currentStreak }}</span>
+                <span class="contrib-graph__label">day streak</span>
+            </div>
+            <a href="{{ contributions.profileUrl }}" target="_blank" rel="noopener" class="contrib-graph__profile">
+                @{{ contributions.username }} <span aria-hidden="true">↗</span>
+            </a>
+        </div>
+        <div class="contrib-graph__scroll" tabindex="0" aria-label="GitHub contribution calendar">
+            <div class="contrib-graph__months" aria-hidden="true">
+                {% for month in contributions.monthLabels %}<span>{{ month }}</span>{% endfor %}
+            </div>
+            <div class="contrib-graph__grid">
+                {% for week in contributions.weeks %}
+                <div class="contrib-graph__week">
+                    {% for day in week.contributionDays %}
+                    <span class="contrib-graph__day" data-count="{{ day.contributionCount }}" data-level="{{ day.contributionLevel|lower }}"
+                          title="{{ day.date }}: {{ day.contributionCount }} contributions"></span>
                     {% endfor %}
                 </div>
-            
-                <!-- Footer & Legend -->
-                <div class="contrib-graph__footer">
-                    <div class="contrib-graph__legend">
-                        Less
-                        <span class="legend-box" data-level="0"></span>
-                        <span class="legend-box" data-level="1"></span>
-                        <span class="legend-box" data-level="2"></span>
-                        <span class="legend-box" data-level="3"></span>
-                        <span class="legend-box" data-level="4"></span>
-                        More
-                    </div>
-                </div>
+                {% endfor %}
             </div>
-            {% endfor %}
+        </div>
+        <div class="contrib-graph__footer">
+            <span>Synced from GitHub</span>
+            <div class="contrib-graph__legend" aria-label="Contribution intensity from less to more">
+                Less
+                <span class="legend-box" data-level="none"></span>
+                <span class="legend-box" data-level="first_quartile"></span>
+                <span class="legend-box" data-level="second_quartile"></span>
+                <span class="legend-box" data-level="third_quartile"></span>
+                <span class="legend-box" data-level="fourth_quartile"></span>
+                More
+            </div>
         </div>
     </div>
     {% else %}
-    <p class="contrib-graph__empty">GitHub activity unavailable right now.</p>
+    <div class="contrib-graph__empty">
+        <p>GitHub activity could not be refreshed right now.</p>
+        <a href="https://github.com/{{ github_username }}" target="_blank" rel="noopener">View @{{ github_username }} on GitHub ↗</a>
+    </div>
     {% endif %}
 </section>
 
@@ -136,8 +165,9 @@
         {% for project in featured_projects %}
         <a href="{% url 'project_detail' project.slug %}" class="project-showcase">
             <div class="project-showcase__thumb">
-                <img src="{{ project.thumbnail.url }}" alt="{{ project.title }}"
+                {% if project.thumbnail %}<img src="{{ project.thumbnail.url }}" alt="{{ project.title }}"
                     class="project-showcase__img project-showcase__img--base" loading="lazy">
+                {% endif %}
                 {% with hover_image=project.gallery.first %}
                 {% if hover_image %}
                 <img src="{{ hover_image.image.url }}" alt="" class="project-showcase__img project-showcase__img--hover"
@@ -198,7 +228,7 @@
             <span class="badge-pill__icon" aria-hidden="true">&#10022;</span>
             My Arsenal
         </span>
-        <h2 class="tech-arsenal__title">Technologies I<br><span>orchestrate</span></h2>
+        <h2 class="tech-arsenal__title">Technologies I<br><span data-tech-verb>engineer</span></h2>
         <p class="section-subtitle">Building modern web experiences with cutting-edge tools and frameworks.</p>
     </div>
 

@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block title %}Work — {{ block.super }}{% endblock %}
+{% block meta_description %}Development and design work by Nmaju Favour (Phayvo).{% endblock %}
+
+{% block content %}
+<section class="work-index">
+    <header class="work-index__hero" data-reveal>
+        <div>
+            <span class="section-index">02</span>
+            <p class="work-index__eyebrow">Selected work / two disciplines</p>
+        </div>
+        <h1>Engineering systems.<br><span>Designing clarity.</span></h1>
+        <p>Full-stack products, dependable backends, sharp frontends, and visual systems — separated by discipline, connected by intent.</p>
+    </header>
+
+    <div class="work-index__disciplines" aria-label="Work disciplines" data-reveal>
+        <a href="#development"><span>01</span> Development</a>
+        <a href="#design"><span>02</span> Design</a>
+    </div>
+</section>
+
+<section class="work-lane" id="development" data-reveal>
+    <header class="work-lane__header">
+        <div>
+            <span class="work-lane__number">01 / DEVELOPMENT</span>
+            <h2>Products &amp; engineering</h2>
+            <p>MERN and full-stack applications, backend architecture, APIs, and deliberate frontends.</p>
+        </div>
+        <div class="work-lane__capabilities" aria-label="Development capabilities">
+            <span>Frontend</span><span>MERN / Full-stack</span><span>Backend systems</span>
+        </div>
+        <a href="{% url 'project_list_dev' %}" class="work-lane__all">All development work ↗</a>
+    </header>
+    <div class="project-grid">
+        {% for project in development_projects|slice:':4' %}
+        <article class="project-card project-card--dev" data-spotlight>
+            <a href="{% url 'project_detail' project.slug %}" class="project-card__link">
+                <div class="project-card__thumb">
+                    {% if project.thumbnail %}<img src="{{ project.thumbnail.url }}" alt="{{ project.title }}" loading="lazy">{% endif %}
+                    <span class="project-card__arrow" aria-hidden="true">↗</span>
+                </div>
+                <div class="project-card__body">
+                    <span class="project-card__kind">{{ project.get_category_display }}</span>
+                    <h3 class="project-card__title">{{ project.title }}</h3>
+                    <p class="project-card__desc">{{ project.description }}</p>
+                    <ul class="tech-pills">
+                        {% for skill in project.skills_used.all|slice:':4' %}<li class="tech-pill">{{ skill.name }}</li>{% endfor %}
+                    </ul>
+                </div>
+            </a>
+        </article>
+        {% empty %}
+        <p class="project-grid__empty">Development case studies are being documented.</p>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="work-lane" id="design" data-reveal>
+    <header class="work-lane__header">
+        <div>
+            <span class="work-lane__number">02 / DESIGN</span>
+            <h2>Visual &amp; technical design</h2>
+            <p>Product interfaces, identity systems, vector work, and design infrastructure.</p>
+        </div>
+        <div class="work-lane__capabilities" aria-label="Design capabilities">
+            <span>UI / UX</span><span>Brand identity</span><span>Visual systems</span>
+        </div>
+        <a href="{% url 'project_list_design' %}" class="work-lane__all">All design work ↗</a>
+    </header>
+    <div class="project-grid project-grid--design-lane">
+        {% for project in design_projects|slice:':4' %}
+        <article class="project-card project-card--design" data-spotlight>
+            <a href="{% url 'project_detail' project.slug %}" class="project-card__link">
+                <div class="project-card__thumb">
+                    {% if project.thumbnail %}<img src="{{ project.thumbnail.url }}" alt="{{ project.title }}" loading="lazy">{% endif %}
+                    <div class="project-card__hover">
+                        <span class="project-card__role">{{ project.design_role|default:'Visual system' }}</span>
+                        <span aria-hidden="true">↗</span>
+                    </div>
+                </div>
+                <div class="project-card__body">
+                    <span class="project-card__kind">Design</span>
+                    <h3 class="project-card__title">{{ project.title }}</h3>
+                </div>
+            </a>
+        </article>
+        {% empty %}
+        <p class="project-grid__empty">Design case studies are being documented.</p>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}
