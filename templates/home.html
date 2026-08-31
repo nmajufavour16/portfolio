@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}{{ about.headline|default:"Nmaju Favour's Portfolio — Full Stack Developer & Visual Designer" }}{% endblock %}
 
@@ -9,14 +10,9 @@
     <div class="hero__cursor-orb" data-hero-lens aria-hidden="true"></div>
 
     <article class="hero-card" data-reveal>
-        <span class="edge-glow-left" style="left: -1px;" aria-hidden="true"></span>
-        <span class="edge-glow-right" style="right: -1px;" aria-hidden="true"></span>
+        <span class="nav-border-glow" aria-hidden="true"></span>
         <div class="hero-card__portrait-pane">
-            {% if about.profile_image %}
-            <img src="{{ about.profile_image.url }}" alt="{{ about.name }}" class="hero__portrait">
-            {% else %}
-            <span class="hero-card__monogram" aria-hidden="true">PF</span>
-            {% endif %}
+            <img src="{% static 'images/logo.png' %}" alt="{{ about.name|default:'Phayvo' }}" class="hero__portrait">
         </div>
 
         <div class="hero-card__content">
@@ -39,7 +35,7 @@
 
                 <div class="hero-card__footer-actions">
                     <div class="hero__actions">
-                        <a href="{{ about.resume_pdf.url|default:'#' }}" class="btn btn--primary" target="_blank">View Resume</a>
+                        <a href="{% if about.resume_pdf %}{{ about.resume_pdf.url }}{% else %}#{% endif %}" class="btn btn--primary" target="_blank">View Resume</a>
                     </div>
 
                     <div class="hero__socials">

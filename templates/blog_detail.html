@@ -7,7 +7,7 @@
 {% block content %}
 
 <article class="blog-post" data-reveal>
-    <a href="{% url 'blog_list' %}" class="case-study__back">&larr; Blog</a>
+    <a href="{% url 'blog' %}" class="case-study__back">&larr; Blog</a>
 
     <header class="blog-post__header">
         <span class="blog-post__meta">{{ post.created_at|date:"F j, Y" }} &middot; {{ post.reading_time }} min read</span>

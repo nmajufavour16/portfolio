@@ -7,6 +7,7 @@
     <title>{% block title %}Phayvo — Full Stack Developer &amp; Visual Designer{% endblock %}</title>
     <meta name="description" content="{% block meta_description %}Portfolio of Phayvo — full-stack developer and visual designer.{% endblock %}">
     <meta name="theme-color" content="#0f0f0f">
+    <link rel="icon" href="{% static 'images/logo.png' %}" type="image/png">
 
     <script>
         (() => {
@@ -57,14 +58,15 @@
              x-init="window.addEventListener('scroll', () => scrolled = window.scrollY > 40)"
              :class="{ 'is-scrolled': scrolled }">
         <div class="site-header__inner liquidGlass-wrapper">
-            <span class="edge-glow-left" aria-hidden="true"></span>
-            <span class="edge-glow-right" aria-hidden="true"></span>
+            <span class="nav-border-glow" aria-hidden="true"></span>
             <div class="liquidGlass-effect" aria-hidden="true"></div>
             <div class="liquidGlass-tint" aria-hidden="true"></div>
             <div class="liquidGlass-shine" aria-hidden="true"></div>
 
             <div class="site-header__content liquidGlass-text">
-                <a href="{% url 'home' %}" class="site-header__logo" aria-label="Phayvo, home">
+                <a href="{% url 'home' %}" class="site-header__logo" aria-label="Phayvo, home" style="display: flex; align-items: center; gap: 8px;">
+                    <!-- TODO: Replace the src below with your actual logo URL, e.g. src="{% static 'images/my-logo.png' %}" -->
+                    <img src="{% static 'images/logo.png' %}" alt="Logo" style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover;">
                     <span>Phayvo</span>
                 </a>
 
@@ -111,9 +113,11 @@
                 <span>Full Stack Developer</span><span class="marquee__dot">&#9670;</span>
                 <span>Visual Designer</span><span class="marquee__dot">&#9670;</span>
                 <span>Product Builder</span><span class="marquee__dot">&#9670;</span>
+                <span>Backend Engineer</span><span class="marquee__dot">&#9670;</span>
                 <span>Full Stack Developer</span><span class="marquee__dot">&#9670;</span>
                 <span>Visual Designer</span><span class="marquee__dot">&#9670;</span>
                 <span>Product Builder</span><span class="marquee__dot">&#9670;</span>
+                <span>Backend Engineer</span><span class="marquee__dot">&#9670;</span>
             </div>
         </div>
 

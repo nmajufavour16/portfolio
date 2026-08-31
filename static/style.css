@@ -205,7 +205,7 @@ textarea:focus-visible {
     bottom: 0;
     left: 50%;
     z-index: -1;
-    width: min(1600px, calc(100vw - 3rem));
+    width: min(1120px, calc(100vw - 4rem));
     display: flex;
     justify-content: space-between;
     transform: translateX(-50%);
@@ -256,35 +256,35 @@ textarea:focus-visible {
 /* ==========================================================================
    Edge Glow Lines (Rectangular Borders)
    ========================================================================== */
-.edge-glow-left,
-.edge-glow-right {
+.nav-border-glow {
     position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 1px;
-    z-index: 20;
+    inset: 0px;
+    border-radius: inherit;
+    padding: 1px;
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
     pointer-events: none;
+    z-index: 20;
     overflow: hidden;
 }
 
-.edge-glow-left { left: 0; }
-.edge-glow-right { right: 0; }
-
-.edge-glow-left::after,
-.edge-glow-right::after {
+.nav-border-glow::after {
     content: '';
     position: absolute;
-    left: 0;
-    top: -50%;
-    width: 100%;
-    height: 50%;
-    background: linear-gradient(180deg, transparent, var(--accent), transparent);
+    left: 50%;
+    top: 50%;
+    width: 300%;
+    height: 300%;
+    background: conic-gradient(transparent 60%, var(--accent) 100%);
+    transform: translate(-50%, -50%);
+    animation: rotate-glow 8s linear infinite;
     opacity: 0.9;
-    animation: line-travel 4s linear infinite;
 }
 
-.edge-glow-right::after {
-    animation-delay: -2s;
+@keyframes rotate-glow {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
 @media (max-width: 768px) {
@@ -2171,7 +2171,7 @@ html[data-theme='light'] .hero__name {
 
 .liquidGlass-wrapper {
     isolation: isolate;
-    overflow: visible;
+    overflow: hidden;
     width: min(1120px, 100%);
     height: 62px;
     padding: 0.35rem 0.4rem 0.35rem 1.1rem;
@@ -2609,8 +2609,9 @@ html[data-theme='light'] .hero-card .btn--primary {
     width: clamp(105px, 11vw, 160px);
     aspect-ratio: 1;
     border-radius: 50%;
-    background: #ffffff;
-    mix-blend-mode: difference;
+    background: transparent;
+    backdrop-filter: invert(1) hue-rotate(180deg);
+    -webkit-backdrop-filter: invert(1) hue-rotate(180deg);
     transform: translate3d(-50%, -50%, 0) rotate(var(--fluid-angle)) scaleX(var(--fluid-stretch)) scaleY(var(--fluid-squash));
     opacity: 0;
     pointer-events: none;
