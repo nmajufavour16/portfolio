@@ -28,7 +28,7 @@ class Projects(models.Model):
     title = models.CharField(max_length=100)
     slug = models.SlugField(max_length=100)
     category = models.CharField(max_length=50, choices=Category.choices, default=Category.FULLSTACK)
-    thumbnail = models.ImageField(upload_to='projects/')
+    thumbnail = models.ImageField(upload_to='projects/', blank=True, null=True)
     description = models.CharField(max_length=200)
     
     architecture_notes = models.TextField(blank=True, help_text='DEV: Problem, Architecture, Key Decisions. Leave blank for Design Projects.')
@@ -138,9 +138,12 @@ class AboutMe(models.Model):
     github_username = models.CharField(max_length=100, blank=True, null=True)
     # Social Links
     github_link = models.URLField(max_length=100, blank=True, null=True)
-    twitter_link = models.URLField(max_length=100, blank=True, null=True)
+    x_link = models.URLField(max_length=100, blank=True, null=True)
     linkedin_link = models.URLField(max_length=100, blank=True, null=True)
     instagram_link = models.URLField(max_length=100, blank=True, null=True)
+    medium_link = models.URLField(max_length=100, blank=True, null=True)
+    substack_link = models.URLField(max_length=100, blank=True, null=True)
+    pinterest_link = models.URLField(max_length=100, blank=True, null=True)
     pinterest_link = models.URLField(max_length=100, blank=True, null=True)
     
     class Meta:
