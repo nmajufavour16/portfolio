@@ -29,7 +29,7 @@ class Projects(models.Model):
     slug = models.SlugField(max_length=100)
     category = models.CharField(max_length=50, choices=Category.choices, default=Category.FULLSTACK)
     thumbnail = models.ImageField(upload_to='projects/', blank=True, null=True)
-    description = models.CharField(max_length=200)
+    description = models.CharField(max_length=500)
     
     architecture_notes = models.TextField(blank=True, help_text='DEV: Problem, Architecture, Key Decisions. Leave blank for Design Projects.')
     design_role = models.CharField(max_length=100, blank=True, help_text="Design: e.g. 'Brand Identity, UI/UX'. Leave blank for DEV projects.")
@@ -143,7 +143,7 @@ class AboutMe(models.Model):
     instagram_link = models.URLField(max_length=100, blank=True, null=True)
     medium_link = models.URLField(max_length=100, blank=True, null=True)
     substack_link = models.URLField(max_length=100, blank=True, null=True)
-    pinterest_link = models.URLField(max_length=100, blank=True, null=True)
+    whatsapp_link = models.URLField(max_length=100, blank=True, null=True)
     pinterest_link = models.URLField(max_length=100, blank=True, null=True)
     
     class Meta:
