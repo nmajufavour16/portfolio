@@ -87,8 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // touch and reduced-motion users.
     const hero = document.querySelector('.hero');
     const heroCard = document.querySelector('.hero-card');
-    const canUseLens = window.matchMedia('(hover: hover) and (pointer: fine)').matches
-        && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const canUseLens = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     if (hero && heroCard && canUseLens) {
         // Create reverse-theme clone wrapper
@@ -162,7 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         let idleTimeout;
-        hero.addEventListener('mousemove', (e) => {
+        hero.addEventListener('pointermove', (e) => {
             active = true;
             const rect = hero.getBoundingClientRect();
             targetX = e.clientX - rect.left;

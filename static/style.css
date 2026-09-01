@@ -3368,7 +3368,7 @@ html[data-theme='light'] .hero-card-lens-wrapper[data-theme='dark'] .hero__name 
 }
 
 .sp-link:hover {
-    color: var(--text);
+    color: var(--accent);
 }
 
 .sp-link svg {
