@@ -22,6 +22,8 @@ class Skills(models.Model):
 class Projects(models.Model):
     class Category(models.TextChoices):
         FULLSTACK = 'Full Stack Development'
+        FRONTEND = 'Frontend Development'
+        BACKEND = 'Backend Development'
         DESIGN = 'Design'
         AI = 'AI Integration'
         
