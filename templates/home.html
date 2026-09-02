@@ -180,10 +180,11 @@
 </section>
 
 <!-- SELECTED PROJECTS -->
-<section class="selected-projects" data-reveal x-data="{ filter: 'all' }">
-    <header class="selected-projects__header">
-        <h2 class="selected-projects__title">Selected Projects</h2>
-        <div class="selected-projects__filters">
+<section class="featured-work" data-reveal x-data="{ filter: 'all' }">
+    <header class="section-header">
+        <span class="section-index">02</span>
+        <h2 class="section-title">Featured Work</h2>
+        <div class="selected-projects__filters" style="margin-left: auto;">
             <button @click="filter = 'all'" :class="{ 'is-active': filter === 'all' }">All</button>
             <button @click="filter = 'design'" :class="{ 'is-active': filter === 'design' }">Design</button>
             <button @click="filter = 'frontend'" :class="{ 'is-active': filter === 'frontend' }">Frontend</button>
