@@ -3,19 +3,13 @@
 {% block title %}404 — Page Not Found{% endblock %}
 
 {% block content %}
-<section class="error-page hero" style="min-height: 70vh; display: flex; flex-direction: column; justify-content: center; align-items: center; padding-top: 5rem; position: relative;">
-    <article class="hero-card" style="background: transparent; border: none; box-shadow: none; padding: 0; width: 100%;">
-        <div class="hero-card__content" style="display: flex; flex-direction: column; align-items: center; text-align: center;">
-            <h1 style="font-size: clamp(6rem, 15vw, 12rem); font-weight: 800; line-height: 1; margin: 0; background: linear-gradient(180deg, #ffffff 0%, #b8b8bc 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">404</h1>
-            <h2 style="font-size: clamp(1.5rem, 3vw, 2.5rem); margin-top: 1rem; margin-bottom: 0.5rem;">Lost in the void.</h2>
-            <p class="hero-card__bio" style="max-width: 400px; margin: 0 auto 2.5rem;">The page you're looking for has drifted out of bounds or doesn't exist.</p>
-            
-            <div class="hero-card__footer-actions" style="justify-content: center; margin-top: 0;">
-                <div class="hero__actions">
-                    <a href="{% url 'home' %}" class="btn btn--primary">Return Home</a>
-                </div>
-            </div>
-        </div>
-    </article>
+<section class="error-page" style="min-height: 75vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 2rem; position: relative;">
+    <div class="hero__cursor-orb" aria-hidden="true" style="opacity: 0.5;"></div>
+    
+    <h1 style="font-size: clamp(6rem, 15vw, 12rem); font-weight: 800; line-height: 1; margin: 0; background: linear-gradient(180deg, #ffffff 0%, #b8b8bc 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">404</h1>
+    <h2 style="font-size: clamp(1.5rem, 3vw, 2.5rem); margin-top: 1rem; margin-bottom: 0.5rem;">Lost in the void.</h2>
+    <p style="color: var(--text-muted); max-width: 400px; margin: 0 auto 2.5rem; font-size: 1.1rem;">The page you're looking for has drifted out of bounds or doesn't exist.</p>
+    
+    <a href="{% url 'home' %}" class="btn btn--primary">Return Home</a>
 </section>
 {% endblock %}

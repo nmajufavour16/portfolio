@@ -141,8 +141,9 @@ document.addEventListener('DOMContentLoaded', () => {
             currentY += deltaY * 0.13;
 
             const velocity = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-            const squash = Math.max(0.6, 1 - velocity * 0.004);
-            const stretch = Math.min(1.4, 1 + velocity * 0.004);
+            // Greatly increase the stretch max and velocity multiplier for a more fluid effect
+            const squash = Math.max(0.3, 1 - velocity * 0.008);
+            const stretch = Math.min(2.5, 1 + velocity * 0.008);
             const angle = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
 
             cloneWrapper.style.setProperty('--lens-x', `${currentX}px`);

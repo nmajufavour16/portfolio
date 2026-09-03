@@ -258,7 +258,18 @@
             {% for category, skills in expertise_groups.items %}
                 {% for skill in skills %}
                 <li class="skill-pill">
-                    {{ skill.name }}
+                    <div class="skill-pill__left">
+                        {% if skill.resolved_icon_slug %}
+                        <img src="https://cdn.simpleicons.org/{{ skill.resolved_icon_slug }}" alt="{{ skill.name }}" width="22" height="22" loading="lazy" class="skill-pill__icon" />
+                        {% endif %}
+                        <span class="skill-pill__name">{{ skill.name }}</span>
+                    </div>
+                    <div class="skill-pill__right">
+                        <span class="skill-pill__percent">{{ skill.proficiency }}%</span>
+                        <div class="skill-pill__track">
+                            <div class="skill-pill__fill" style="width: {{ skill.proficiency }}%;"></div>
+                        </div>
+                    </div>
                 </li>
                 {% endfor %}
             {% endfor %}
@@ -270,7 +281,18 @@
         <ul class="skills-grid">
             {% for skill in skills %}
             <li class="skill-pill">
-                {{ skill.name }}
+                <div class="skill-pill__left">
+                    {% if skill.resolved_icon_slug %}
+                    <img src="https://cdn.simpleicons.org/{{ skill.resolved_icon_slug }}" alt="{{ skill.name }}" width="22" height="22" loading="lazy" class="skill-pill__icon" />
+                    {% endif %}
+                    <span class="skill-pill__name">{{ skill.name }}</span>
+                </div>
+                <div class="skill-pill__right">
+                    <span class="skill-pill__percent">{{ skill.proficiency }}%</span>
+                    <div class="skill-pill__track">
+                        <div class="skill-pill__fill" style="width: {{ skill.proficiency }}%;"></div>
+                    </div>
+                </div>
             </li>
             {% endfor %}
         </ul>
