@@ -5,9 +5,6 @@ import requests
 from django.core.cache import cache
 from django.conf import settings
 
-from .models import SiteSettings
-from django.db.models import F
-
 GITHUB_GRAPHQL_URL = 'https://api.github.com/graphql'
 SPOTIFY_TOKEN_URL = 'https://accounts.spotify.com/api/token'
 SPOTIFY_API_URL = 'https://api.spotify.com/v1/me/player'
@@ -278,6 +275,9 @@ def get_spotify_listening():
         return cache.get(stale_cache_key)
 
 def get_visit_count():
+    from django.apps import apps
+    from django.db.models import F
+    SiteSettings = apps.get_model('portfolio', 'SiteSettings')
     settings_obj, _ = SiteSettings.objects.get_or_create(id=1)
     SiteSettings.objects.filter(id=1).update(all_time_visitors=F('all_time_visitors') + 1)
     settings_obj.refresh_from_db()
