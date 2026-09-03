@@ -254,21 +254,16 @@
 
     <!-- The "All" panel -->
     <div class="expertise__panel" x-show="active === 0" x-cloak>
-        <ul class="skills-grid">
+        <ul class="proficiency-list">
             {% for category, skills in expertise_groups.items %}
                 {% for skill in skills %}
-                <li class="skill-pill">
-                    <div class="skill-pill__left">
-                        {% if skill.resolved_icon_slug %}
-                        <img src="https://cdn.simpleicons.org/{{ skill.resolved_icon_slug }}" alt="{{ skill.name }}" width="22" height="22" loading="lazy" class="skill-pill__icon" />
-                        {% endif %}
-                        <span class="skill-pill__name">{{ skill.name }}</span>
+                <li class="proficiency-item">
+                    <div class="proficiency-item__label">
+                        <span>{{ skill.name }}</span>
+                        <span>{{ skill.proficiency }}%</span>
                     </div>
-                    <div class="skill-pill__right">
-                        <span class="skill-pill__percent">{{ skill.proficiency }}%</span>
-                        <div class="skill-pill__track">
-                            <div class="skill-pill__fill" style="width: {{ skill.proficiency }}%;"></div>
-                        </div>
+                    <div class="proficiency-item__track">
+                        <div class="proficiency-item__fill" data-progress="{{ skill.proficiency }}"></div>
                     </div>
                 </li>
                 {% endfor %}
@@ -278,20 +273,15 @@
 
     {% for category, skills in expertise_groups.items %}
     <div class="expertise__panel" x-show="active === {{ forloop.counter }}" x-cloak>
-        <ul class="skills-grid">
+        <ul class="proficiency-list">
             {% for skill in skills %}
-            <li class="skill-pill">
-                <div class="skill-pill__left">
-                    {% if skill.resolved_icon_slug %}
-                    <img src="https://cdn.simpleicons.org/{{ skill.resolved_icon_slug }}" alt="{{ skill.name }}" width="22" height="22" loading="lazy" class="skill-pill__icon" />
-                    {% endif %}
-                    <span class="skill-pill__name">{{ skill.name }}</span>
+            <li class="proficiency-item">
+                <div class="proficiency-item__label">
+                    <span>{{ skill.name }}</span>
+                    <span>{{ skill.proficiency }}%</span>
                 </div>
-                <div class="skill-pill__right">
-                    <span class="skill-pill__percent">{{ skill.proficiency }}%</span>
-                    <div class="skill-pill__track">
-                        <div class="skill-pill__fill" style="width: {{ skill.proficiency }}%;"></div>
-                    </div>
+                <div class="proficiency-item__track">
+                    <div class="proficiency-item__fill" data-progress="{{ skill.proficiency }}"></div>
                 </div>
             </li>
             {% endfor %}

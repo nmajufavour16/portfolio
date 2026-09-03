@@ -2,7 +2,10 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.utils import timezone
-
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+from django.conf import settings
 
 from .models import AboutMe, Contact, Skills, Projects, BlogPost, Testimonials, Timeline, ProjectImage
 from .forms import ContactForm
@@ -121,7 +124,32 @@ def contact(request):
     if request.method == 'POST':
         form = ContactForm(request.POST)
         if form.is_valid():
-            form.save()
+            contact_instance = form.save()
+            
+            # Send Email Notification
+            try:
+                subject = f"RE: {contact_instance.subject}" if contact_instance.subject else f"New Message from {contact_instance.name}"
+                from_email = settings.DEFAULT_FROM_EMAIL
+                to_email = [settings.DEFAULT_FROM_EMAIL]
+                reply_to = [contact_instance.email]
+                
+                context = {
+                    'name': contact_instance.name,
+                    'email': contact_instance.email,
+                    'subject': contact_instance.subject,
+                    'message': contact_instance.message,
+                }
+                
+                html_content = render_to_string('email/contact_notification.html', context)
+                text_content = strip_tags(html_content)
+                
+                msg = EmailMultiAlternatives(subject, text_content, from_email, to_email, reply_to=reply_to)
+                msg.attach_alternative(html_content, "text/html")
+                msg.send(fail_silently=True)
+            except Exception as e:
+                # Silently fail so it doesn't break form submission if email settings aren't configured yet
+                pass
+
             messages.success(request, "Thank you for reaching out. I'll respond to your message as soon as I can.")
             return redirect('contact')
         else:
