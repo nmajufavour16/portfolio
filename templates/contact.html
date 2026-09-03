@@ -50,8 +50,10 @@
 
     <div class="contact-info" data-reveal>
         {% if global_about.github_link %}<a href="{{ global_about.github_link }}" target="_blank" rel="noopener">GitHub</a>{% endif %}
+        {% if global_about.x_link %}<a href="{{ global_about.x_link }}" target="_blank" rel="noopener">X (Twitter)</a>{% endif %}
         {% if global_about.linkedin_link %}<a href="{{ global_about.linkedin_link }}" target="_blank" rel="noopener">LinkedIn</a>{% endif %}
-        {% if global_about.instagram_link %}<a href="{{ global_about.instagram_link }}" target="_blank" rel="noopener">Instagram</a>{% endif %}
+        {% if global_about.email_link %}<a href="{{ global_about.email_link }}" target="_blank" rel="noopener">Email</a>{% endif %}
+        {% if global_about.whatsapp_link %}<a href="{{ global_about.whatsapp_link }}" target="_blank" rel="noopener">WhatsApp</a>{% endif %}
     </div>
 </section>
 
