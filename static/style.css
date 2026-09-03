@@ -1,9 +1,5 @@
 /* ==========================================================================
    Phayvo — Portfolio stylesheet
-   Aesthetic references:
-   - rameshwarbhagwat.me  → dark glassmorphism, marquee tickers, count-up stats
-   - udayahireexe.vercel.app → numbered sections, minimal borders, mono accents
-   - robinsonhonour.me    → oversized hero type, generous section rhythm
    ========================================================================== */
 
 /* ---------- Design tokens ---------- */
@@ -118,17 +114,6 @@ body {
     transition: background-color 240ms ease, color 240ms ease;
 }
 
-/* Subtle radial glow behind the hero */
-body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    z-index: -1;
-    background:
-        radial-gradient(600px 400px at 75% -5%, var(--accent-soft), transparent 65%),
-        radial-gradient(800px 500px at 15% 110%, rgba(120, 119, 198, 0.08), transparent 60%);
-    pointer-events: none;
-}
 
 img {
     max-width: 100%;
@@ -222,8 +207,8 @@ textarea:focus-visible {
 }
 
 /* ==========================================================================
-   Ambient decorative lines — sitewide, echoes the background motion on
-   udayahireexe.vercel.app. Pure decoration: fixed, behind everything,
+   Ambient decorative lines — sitewide, 
+   Pure decoration: fixed, behind everything,
    ignored by assistive tech, and stripped on mobile for performance.
    ========================================================================== */
 .ambient-lines {
@@ -366,7 +351,7 @@ main#main-content>section+section {
 }
 
 /* ==========================================================================
-   Liquid-glass header (Robinson-style floating glass nav)
+   Liquid-glass header 
    ========================================================================== */
 .site-header {
     position: fixed;
@@ -818,7 +803,7 @@ html[data-theme='light'] .hero__name {
 }
 
 /* ==========================================================================
-   Section headers — numbered index like Uday's "01. / About"
+   Section headers — numbered index
    ========================================================================== */
 .section-header {
     display: flex;
@@ -1091,7 +1076,7 @@ html[data-theme='light'] .hero__name {
     font-weight: 600;
 }
 
-.proficiency-list {
+.skills-grid {
     list-style: none;
     margin: 0;
     padding: clamp(1.5rem, 3vw, 2.25rem);
@@ -1100,36 +1085,28 @@ html[data-theme='light'] .hero__name {
     background: var(--surface);
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 2rem 1.5rem;
+    gap: 1rem;
     width: 100%;
 }
 
-.proficiency-item__label {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 0.55rem;
-    font-size: 0.92rem;
-    font-weight: 600;
-}
-
-.proficiency-item__label span:last-child {
-    font-family: var(--font-mono);
-    font-weight: 500;
-    color: var(--accent);
-}
-
-.proficiency-item__track {
-    height: 6px;
+.skill-pill {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
     border-radius: 999px;
-    background: rgba(255, 255, 255, 0.07);
-    overflow: hidden;
+    padding: 0.75rem 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--text);
+    text-align: center;
+    transition: background 0.2s, border-color 0.2s;
 }
 
-.proficiency-item__fill {
-    width: 0;
-    height: 100%;
-    border-radius: inherit;
-    background: linear-gradient(90deg, var(--accent-muted), var(--accent));
+.skill-pill:hover {
+    background: var(--surface-strong);
+    border-color: var(--accent);
 }
 
 /* ==========================================================================
@@ -2065,8 +2042,8 @@ html[data-theme='light'] .hero__name {
         grid-template-columns: 1fr;
     }
 
-    .proficiency-list {
-        grid-template-columns: repeat(2, 1fr);
+    .skills-grid {
+        grid-template-columns: repeat(3, 1fr);
     }
 
 
@@ -2092,8 +2069,8 @@ html[data-theme='light'] .hero__name {
 }
 
 @media (max-width: 560px) {
-    .proficiency-list {
-        grid-template-columns: 1fr;
+    .skills-grid {
+        grid-template-columns: repeat(2, 1fr);
     }
     .stats-bar {
         grid-template-columns: 1fr 1fr;
@@ -3256,13 +3233,13 @@ html[data-theme='light'] .hero-card-lens-wrapper[data-theme='dark'] .hero__name 
     transition: all 0.2s ease;
 }
 
-.selected-projects__filters button.is-active,
-.selected-projects__filters button:hover {
+.selected-projects__filters button.is-active {
     color: var(--text);
+    background: var(--surface-strong);
 }
 
-.selected-projects__filters button.is-active {
-    background: var(--surface-strong);
+.selected-projects__filters button:hover {
+    color: var(--accent);
 }
 
 .selected-projects__grid {

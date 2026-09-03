@@ -254,17 +254,11 @@
 
     <!-- The "All" panel -->
     <div class="expertise__panel" x-show="active === 0" x-cloak>
-        <ul class="proficiency-list">
+        <ul class="skills-grid">
             {% for category, skills in expertise_groups.items %}
                 {% for skill in skills %}
-                <li class="proficiency-item">
-                    <div class="proficiency-item__label">
-                        <span>{{ skill.name }}</span>
-                        <span>{{ skill.proficiency }}%</span>
-                    </div>
-                    <div class="proficiency-item__track">
-                        <div class="proficiency-item__fill" data-progress="{{ skill.proficiency }}"></div>
-                    </div>
+                <li class="skill-pill">
+                    {{ skill.name }}
                 </li>
                 {% endfor %}
             {% endfor %}
@@ -273,16 +267,10 @@
 
     {% for category, skills in expertise_groups.items %}
     <div class="expertise__panel" x-show="active === {{ forloop.counter }}" x-cloak>
-        <ul class="proficiency-list">
+        <ul class="skills-grid">
             {% for skill in skills %}
-            <li class="proficiency-item">
-                <div class="proficiency-item__label">
-                    <span>{{ skill.name }}</span>
-                    <span>{{ skill.proficiency }}%</span>
-                </div>
-                <div class="proficiency-item__track">
-                    <div class="proficiency-item__fill" data-progress="{{ skill.proficiency }}"></div>
-                </div>
+            <li class="skill-pill">
+                {{ skill.name }}
             </li>
             {% endfor %}
         </ul>

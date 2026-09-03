@@ -170,3 +170,12 @@ class ProjectImage(models.Model):
  
     def __str__(self):
         return f"{self.project.title} — {self.get_stage_display()} #{self.order}"
+
+class SiteSettings(models.Model):
+    all_time_visitors = models.PositiveIntegerField(default=0)
+    
+    class Meta:
+        verbose_name_plural = "Site Settings"
+        
+    def __str__(self):
+        return "Site Settings"
