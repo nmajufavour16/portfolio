@@ -13,12 +13,12 @@
     --text: #f5f5f4;
     --text-muted: #a1a1aa;
     --text-faint: #6b6b70;
-    --accent: #39ff14;
-    --accent-hover: #52ff33;
-    --accent-soft: rgba(57, 255, 20, 0.12);
-    --accent-glow: rgba(57, 255, 20, 0.28);
-    --accent-muted: rgba(57, 255, 20, 0.55);
-    --accent-contrast: #000000;
+    --accent: #32cd32;
+    --accent-hover: #4ced4c;
+    --accent-soft: rgba(50, 205, 50, 0.12);
+    --accent-glow: rgba(50, 205, 50, 0.28);
+    --accent-muted: rgba(50, 205, 50, 0.55);
+    --accent-contrast: #0b2f0b;
     --live: #4ade80;
     --danger: #f87171;
     --contrib-0: #161b22;
@@ -48,12 +48,12 @@ html[data-theme='dark'],
     --text: #f5f5f4;
     --text-muted: #a1a1aa;
     --text-faint: #6b6b70;
-    --accent: #39ff14;
-    --accent-hover: #52ff33;
-    --accent-soft: rgba(57, 255, 20, 0.12);
-    --accent-glow: rgba(57, 255, 20, 0.28);
-    --accent-muted: rgba(57, 255, 20, 0.55);
-    --accent-contrast: #000000;
+    --accent: #c8f051;
+    --accent-hover: #d8fa6e;
+    --accent-soft: rgba(200, 240, 81, 0.12);
+    --accent-glow: rgba(200, 240, 81, 0.28);
+    --accent-muted: rgba(200, 240, 81, 0.55);
+    --accent-contrast: #101204;
     --live: #4ade80;
     --danger: #f87171;
     --contrib-0: #161b22;
@@ -843,7 +843,7 @@ html[data-theme='light'] .hero__name {
     gap: 1.25rem;
 }
 
-.section-header > .btn {
+.section-header>.btn {
     margin-left: auto;
 }
 
@@ -1088,7 +1088,7 @@ html[data-theme='light'] .hero__name {
     border-radius: var(--radius-lg);
     background: var(--surface);
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 2rem 1.5rem;
     width: 100%;
 }
@@ -1096,6 +1096,7 @@ html[data-theme='light'] .hero__name {
 .proficiency-item__label {
     display: flex;
     justify-content: space-between;
+    gap: 0.5rem;
     margin-bottom: 0.55rem;
     font-size: 0.92rem;
     font-weight: 600;
@@ -1119,6 +1120,12 @@ html[data-theme='light'] .hero__name {
     height: 100%;
     border-radius: inherit;
     background: linear-gradient(90deg, var(--accent-muted), var(--accent));
+}
+
+@media (min-width: 768px) {
+    .proficiency-list {
+        grid-template-columns: repeat(4, 1fr);
+    }
 }
 
 /* ==========================================================================
@@ -2635,7 +2642,8 @@ html[data-theme='light'] .hero-card {
 }
 
 .hero-card .listening-strip {
-    margin-top: 1.5rem; /* Replaced auto to ensure it stays away from button */
+    margin-top: 1.5rem;
+    /* Replaced auto to ensure it stays away from button */
     padding-top: 1.75rem;
     border-width: 0;
     border-top: 1px solid var(--border);
@@ -2747,7 +2755,8 @@ html[data-theme='light'] .hero-card-lens-wrapper[data-theme='dark'] .hero__name 
     color: var(--accent) !important;
 }
 
-@media (hover: none), (pointer: coarse) {
+@media (hover: none),
+(pointer: coarse) {
     .hero-card-lens-wrapper {
         display: none;
     }
@@ -3059,11 +3068,25 @@ html[data-theme='light'] .hero-card-lens-wrapper[data-theme='dark'] .hero__name 
     background: var(--border-strong);
 }
 
-.github-feed__badge--push { background: #4ade80; }
-.github-feed__badge--pull-request { background: #a855f7; }
-.github-feed__badge--issue { background: #facc15; }
-.github-feed__badge--starred { background: #fbbf24; }
-.github-feed__badge--created { background: #60a5fa; }
+.github-feed__badge--push {
+    background: #4ade80;
+}
+
+.github-feed__badge--pull-request {
+    background: #a855f7;
+}
+
+.github-feed__badge--issue {
+    background: #facc15;
+}
+
+.github-feed__badge--starred {
+    background: #fbbf24;
+}
+
+.github-feed__badge--created {
+    background: #60a5fa;
+}
 
 .github-feed__content {
     display: flex;
