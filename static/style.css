@@ -843,6 +843,10 @@ html[data-theme='light'] .hero__name {
     gap: 1.25rem;
 }
 
+.section-header > .btn {
+    margin-left: auto;
+}
+
 .section-header__links a:not(.btn),
 .section-header>a:not(.btn) {
     margin-left: auto;
@@ -1385,6 +1389,10 @@ html[data-theme='light'] .hero__name {
 
 .blog-post__content {
     font-size: 1.05rem;
+}
+
+.blog-post__content p {
+    white-space: pre-wrap;
 }
 
 .blog-post__content p+p,
@@ -2052,10 +2060,6 @@ html[data-theme='light'] .hero__name {
         grid-template-columns: 1fr;
     }
 
-    .proficiency-list {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
 
 
     .section-header {
@@ -2079,9 +2083,6 @@ html[data-theme='light'] .hero__name {
 }
 
 @media (max-width: 560px) {
-    .proficiency-list {
-        grid-template-columns: 1fr;
-    }
     .stats-bar {
         grid-template-columns: 1fr 1fr;
     }
