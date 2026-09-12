@@ -2199,7 +2199,7 @@ html[data-theme='light'] .hero__name {
 
     .site-nav {
         top: calc(100% + 0.55rem);
-        left: 0;
+        left: auto;
         right: 0;
         border-color: rgba(255, 255, 255, 0.12);
         border-radius: 16px;
