@@ -3518,6 +3518,9 @@ html[data-theme='dark'] .contact-profile-card::before {
     text-transform: uppercase;
     letter-spacing: 0.05em;
 }
+.logo-dot {
+    color: var(--accent);
+}
 .logo-initial {
     font-size: 0.8rem;
     font-weight: 800;
