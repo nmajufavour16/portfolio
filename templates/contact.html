@@ -165,14 +165,12 @@ document.addEventListener("DOMContentLoaded", () => {
             if (dist > 0) {
                 // Add 2px so it slips perfectly behind the glass without a gap
                 lanyard.style.height = (dist + 2) + 'px';
-                lanyard.style.background = 'var(--border-strong)';
             } else {
                 lanyard.style.height = '0px';
             }
         } else {
             // Reset for mobile
             lanyard.style.height = '80px';
-            lanyard.style.background = 'linear-gradient(to top, var(--border-strong), transparent)';
         }
     };
     
