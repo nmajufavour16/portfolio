@@ -1,53 +1,107 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Contact — {{ block.super }}{% endblock %}
 
 {% block content %}
+<section class="contact-page-wrapper" data-reveal>
+    <div class="contact-grid">
+        <!-- Left Column: Profile Card -->
+        <div class="contact-profile-card">
+            <!-- Profile Info -->
+            <div class="profile-header">
+                <div class="profile-logo">
+                    <span class="logo-initial">P</span><span class="logo-text">HAYVO</span>
+                </div>
+                <div class="profile-status">
+                    <span class="status-dot is-live"></span>
+                    <span class="status-text">ONLINE</span>
+                </div>
+            </div>
+            
+            <div class="profile-main">
+                <div class="profile-image-wrapper">
+                    <img src="{% static 'images/placeholder.jpg' %}" alt="Profile Placeholder" class="profile-image" onerror="this.src='data:image/svg+xml;charset=UTF-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22 viewBox=%220 0 100 100%22%3E%3Crect width=%22100%22 height=%22100%22 fill=%22%23cccccc%22/%3E%3Ctext x=%2250%22 y=%2250%22 font-family=%22Arial%22 font-size=%2214%22 fill=%22%23333333%22 text-anchor=%22middle%22 dy=%22.3em%22%3EPlaceholder%3C/text%3E%3C/svg%3E'">
+                </div>
+                <h3 class="profile-name">[Your Name]</h3>
+                <p class="profile-role">[Your Role / Title]</p>
+                
+                <div class="profile-details-box">
+                    <div class="detail-row">
+                        <span class="detail-label">EMAIL :</span>
+                        <span class="detail-value">[your-email@example.com]</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">PHONE :</span>
+                        <span class="detail-value">[+1-234-567-8900]</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">LOC :</span>
+                        <span class="detail-value">[Your City, Country]</span>
+                    </div>
+                </div>
+            </div>
+            <div class="profile-footer">
+                <div class="barcode"></div>
+                <span class="barcode-text">PHAYVO-CONTACT-2026</span>
+            </div>
+        </div>
 
-<section class="contact-hero" data-reveal>
-    <h1 class="section-title">Let's work together</h1>
-    <p class="section-subtitle">Have a project in mind, or just want to say hi? Drop a message below.</p>
+        <!-- Right Column: Form -->
+        <div class="contact-form-side">
+            <div class="contact-hero-split">
+                <h1 class="section-title">Let's work together</h1>
+                <p class="section-subtitle">Have a project in mind, or just want to say hi? Drop a message below.</p>
+            </div>
+
+            {% if messages %}
+            <ul class="form-messages">
+                {% for message in messages %}
+                <li class="form-message form-message--{{ message.tags }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+
+            <form method="post" class="contact-form contact-form--minimal" novalidate>
+                {% csrf_token %}
+                {{ form.website }}
+
+                <div class="form-field form-field--minimal">
+                    <label for="{{ form.name.id_for_label }}">NAME</label>
+                    {{ form.name }}
+                    {% if form.name.errors %}<p class="form-field__error">{{ form.name.errors|striptags }}</p>{% endif %}
+                </div>
+
+                <div class="form-field form-field--minimal">
+                    <label for="{{ form.email.id_for_label }}">EMAIL</label>
+                    {{ form.email }}
+                    {% if form.email.errors %}<p class="form-field__error">{{ form.email.errors|striptags }}</p>{% endif %}
+                </div>
+
+                <div class="form-field form-field--minimal">
+                    <label for="{{ form.subject.id_for_label }}">SUBJECT</label>
+                    {{ form.subject }}
+                </div>
+
+                <div class="form-field form-field--minimal">
+                    <label for="{{ form.message.id_for_label }}">MESSAGE</label>
+                    {{ form.message }}
+                    {% if form.message.errors %}<p class="form-field__error">{{ form.message.errors|striptags }}</p>{% endif %}
+                </div>
+
+                <button type="submit" class="btn-send-minimal">
+                    <div class="btn-send-content">
+                        <span class="btn-send-label">READY TO SEND</span>
+                        <h3 class="btn-send-text">SEND MESSAGE</h3>
+                    </div>
+                    <div class="btn-send-icons">
+                        <div class="send-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                        </div>
+                    </div>
+                </button>
+            </form>
+        </div>
+    </div>
 </section>
-
-<section class="contact-form-section" data-reveal>
-    {% if messages %}
-    <ul class="form-messages">
-        {% for message in messages %}
-        <li class="form-message form-message--{{ message.tags }}">{{ message }}</li>
-        {% endfor %}
-    </ul>
-    {% endif %}
-
-    <form method="post" class="contact-form" novalidate>
-        {% csrf_token %}
-        {{ form.website }}
-
-        <div class="form-field">
-            <label for="{{ form.name.id_for_label }}">Name</label>
-            {{ form.name }}
-            {% if form.name.errors %}<p class="form-field__error">{{ form.name.errors|striptags }}</p>{% endif %}
-        </div>
-
-        <div class="form-field">
-            <label for="{{ form.email.id_for_label }}">Email</label>
-            {{ form.email }}
-            {% if form.email.errors %}<p class="form-field__error">{{ form.email.errors|striptags }}</p>{% endif %}
-        </div>
-
-        <div class="form-field">
-            <label for="{{ form.subject.id_for_label }}">Subject</label>
-            {{ form.subject }}
-        </div>
-
-        <div class="form-field">
-            <label for="{{ form.message.id_for_label }}">Message</label>
-            {{ form.message }}
-            {% if form.message.errors %}<p class="form-field__error">{{ form.message.errors|striptags }}</p>{% endif %}
-        </div>
-
-        <button type="submit" class="btn btn--primary">Send message</button>
-    </form>
-
-</section>
-
 {% endblock %}
