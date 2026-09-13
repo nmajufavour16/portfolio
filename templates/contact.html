@@ -160,7 +160,9 @@ document.addEventListener("DOMContentLoaded", () => {
         if (window.innerWidth >= 992) {
             const cardTop = card.getBoundingClientRect().top;
             const headerBottom = header.getBoundingClientRect().bottom;
-            const dist = cardTop - headerBottom;
+            // The lanyard starts 1.25rem (20px) inside the card due to the CSS `bottom: calc(100% - 1.25rem)`
+            // So we must add 20px to the required height to reach the header.
+            const dist = (cardTop - headerBottom) + 20;
             
             if (dist > 0) {
                 // Add 2px so it slips perfectly behind the glass without a gap

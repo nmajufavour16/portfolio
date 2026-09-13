@@ -3399,6 +3399,7 @@ html[data-theme='light'] .hero-card-lens-wrapper[data-theme='dark'] .hero__name 
    ========================================================================== */
 .contact-page-wrapper {
     width: 100%;
+    padding-top: clamp(1rem, 4vw, 3rem);
 }
 
 .contact-grid {
