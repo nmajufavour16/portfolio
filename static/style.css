@@ -343,7 +343,7 @@ main#main-content {
     display: block;
     max-width: var(--container);
     margin: 0 auto;
-    padding: calc(var(--header-h) + clamp(0.5rem, 2vw, 1.5rem)) var(--gutter) var(--section-gap);
+    padding: calc(var(--header-h) + clamp(0.5rem, 2vw, 1.5rem)) var(--gutter) 2rem;
 }
 
 main#main-content>section+section {
@@ -1961,7 +1961,7 @@ html[data-theme='light'] .hero__name {
    Footer — marquee band + socials
    ========================================================================== */
 .site-footer {
-    margin-top: var(--section-gap);
+    margin-top: 2rem;
     border-top: 1px solid var(--border);
     background: var(--bg-elevated);
 }
