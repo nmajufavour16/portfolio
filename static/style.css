@@ -112,6 +112,11 @@ body {
     text-rendering: optimizeLegibility;
     overflow-x: hidden;
     transition: background-color 240ms ease, color 240ms ease;
+    
+    /* Sticky footer layout */
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
 
@@ -341,9 +346,11 @@ textarea:focus-visible {
 /* ---------- Layout container ---------- */
 main#main-content {
     display: block;
+    flex: 1 0 auto; /* Pushes footer down */
     max-width: var(--container);
     margin: 0 auto;
     padding: calc(var(--header-h) + clamp(0.5rem, 2vw, 1.5rem)) var(--gutter) 2rem;
+    width: 100%;
 }
 
 main#main-content>section+section {
