@@ -7,7 +7,10 @@ class ContactForm(forms.ModelForm):
         model = Contact
         fields = ['name', 'email', 'subject', 'message']
         widgets = {
-            'message': forms.Textarea(attrs={'rows': 5}),
+            'name': forms.TextInput(attrs={'placeholder': 'e.g. John Doe'}),
+            'email': forms.EmailInput(attrs={'placeholder': 'e.g. john@example.com'}),
+            'subject': forms.TextInput(attrs={'placeholder': 'e.g. Project Inquiry'}),
+            'message': forms.Textarea(attrs={'rows': 5, 'placeholder': 'Tell me about your project...'}),
         }
         
     def clean_website(self):
