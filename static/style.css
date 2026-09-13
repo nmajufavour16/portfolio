@@ -3406,6 +3406,11 @@ html[data-theme='light'] .hero-card-lens-wrapper[data-theme='dark'] .hero__name 
         grid-template-columns: 1fr 1.5fr;
         gap: 6rem;
     }
+    .contact-profile-card {
+        position: sticky;
+        top: calc(var(--header-h) + clamp(0.5rem, 2vw, 1.5rem) + 3rem);
+        margin-top: 3rem;
+    }
 }
 
 /* --- Profile Card --- */
@@ -3425,14 +3430,13 @@ html[data-theme='light'] .hero-card-lens-wrapper[data-theme='dark'] .hero__name 
 }
 
 .contact-profile-card:hover {
-    transform: translateY(-4px) rotate(1deg);
     box-shadow: 0 35px 70px rgba(0,0,0,0.15);
 }
 
-.contact-profile-card:active {
-    transform: perspective(800px) rotateX(4deg) scale(0.97);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-    transition: transform 0.1s ease, box-shadow 0.1s ease;
+.contact-profile-card.is-active-press {
+    transform: perspective(800px) rotateX(4deg) scale(0.97) !important;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+    transition: transform 0.1s ease, box-shadow 0.1s ease !important;
 }
 
 .contact-profile-card::before {
@@ -3459,13 +3463,20 @@ html[data-theme='dark'] .contact-profile-card::before {
 /* Hanger / Lanyard Clip */
 .card-lanyard {
     position: absolute;
-    top: -100px;
+    bottom: 100%;
     left: 50%;
     transform: translateX(-50%);
     width: 2px;
-    height: 100px;
+    height: 80px;
     background: linear-gradient(to top, var(--border-strong), transparent);
     z-index: 0;
+}
+
+@media (min-width: 992px) {
+    .card-lanyard {
+        height: calc(clamp(0.5rem, 2vw, 1.5rem) + 3rem);
+        background: var(--border-strong);
+    }
 }
 
 .card-lanyard::after {
@@ -3494,9 +3505,11 @@ html[data-theme='dark'] .contact-profile-card::before {
     display: flex;
     align-items: center;
     font-weight: 800;
-    font-size: 1.1rem;
+    font-size: 0.9rem;
     color: var(--text);
-    letter-spacing: -0.02em;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
 .logo-initial {
     font-size: 0.8rem;
@@ -3517,15 +3530,15 @@ html[data-theme='dark'] .contact-profile-card::before {
     gap: 6px;
     padding: 4px 10px;
     border-radius: 999px;
-    background: var(--accent-soft);
-    border: none;
+    background: rgba(16, 185, 129, 0.08);
+    border: 1px solid rgba(16, 185, 129, 0.2);
 }
 .status-text {
     font-size: 0.6rem;
     font-family: var(--font-mono);
     font-weight: 600;
     letter-spacing: 0.1em;
-    color: var(--accent);
+    color: #10b981;
 }
 
 .profile-main {
@@ -3692,9 +3705,10 @@ html[data-theme='dark'] .contact-profile-card::before {
 .form-field--minimal input::placeholder,
 .form-field--minimal textarea::placeholder {
     color: var(--text-muted);
-    text-transform: none;
+    text-transform: uppercase;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    letter-spacing: normal;
+    letter-spacing: 0.05em;
+    font-size: 0.75rem;
 }
 
 .btn-send-minimal {
