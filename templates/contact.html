@@ -150,6 +150,37 @@ document.addEventListener("DOMContentLoaded", () => {
     card.addEventListener('touchend', () => {
         card.classList.remove('is-active-press');
     });
+    
+    // Dynamic lanyard physics
+    const updateLanyard = () => {
+        const header = document.querySelector('.site-header__inner') || document.querySelector('.site-header');
+        const lanyard = document.querySelector('.card-lanyard');
+        if (!header || !lanyard) return;
+        
+        if (window.innerWidth >= 992) {
+            const cardTop = card.getBoundingClientRect().top;
+            const headerBottom = header.getBoundingClientRect().bottom;
+            const dist = cardTop - headerBottom;
+            
+            if (dist > 0) {
+                // Add 2px so it slips perfectly behind the glass without a gap
+                lanyard.style.height = (dist + 2) + 'px';
+                lanyard.style.background = 'var(--border-strong)';
+            } else {
+                lanyard.style.height = '0px';
+            }
+        } else {
+            // Reset for mobile
+            lanyard.style.height = '80px';
+            lanyard.style.background = 'linear-gradient(to top, var(--border-strong), transparent)';
+        }
+    };
+    
+    window.addEventListener('resize', updateLanyard);
+    window.addEventListener('scroll', updateLanyard);
+    // Init on load
+    setTimeout(updateLanyard, 50);
+    setTimeout(updateLanyard, 500);
 });
 </script>
 {% endblock %}

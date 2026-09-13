@@ -3473,8 +3473,8 @@ html[data-theme='dark'] .contact-profile-card::before {
 }
 
 @media (min-width: 992px) {
+    /* Height dynamically managed by JS to exactly reach the navbar */
     .card-lanyard {
-        height: calc(clamp(0.5rem, 2vw, 1.5rem) + 3rem);
         background: var(--border-strong);
     }
 }
