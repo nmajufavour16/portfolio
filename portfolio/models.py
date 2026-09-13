@@ -138,6 +138,10 @@ class AboutMe(models.Model):
     resume_pdf = models.FileField(upload_to='resume/', blank=True, null=True)
     
     github_username = models.CharField(max_length=100, blank=True, null=True)
+    email = models.EmailField(max_length=254, blank=True, null=True)
+    phone = models.CharField(max_length=20, blank=True, null=True)
+    location = models.CharField(max_length=100, blank=True, null=True)
+    
     # Social Links
     github_link = models.URLField(max_length=100, blank=True, null=True)
     x_link = models.URLField(max_length=100, blank=True, null=True)

@@ -23,21 +23,21 @@
                 <div class="profile-image-wrapper">
                     <img src="{% static 'images/logo_rounded.png' %}" alt="Profile Logo" class="profile-image">
                 </div>
-                <h3 class="profile-name">[Your Name]</h3>
-                <p class="profile-role">[Your Role / Title]</p>
+                <h3 class="profile-name">{{ global_about.name }}</h3>
+                <p class="profile-role">{{ global_about.headline }}</p>
                 
                 <div class="profile-details-box">
                     <div class="detail-row">
                         <span class="detail-label">EMAIL :</span>
-                        <span class="detail-value">[your-email@example.com]</span>
+                        <span class="detail-value">{{ global_about.email|default:"N/A" }}</span>
                     </div>
                     <div class="detail-row">
                         <span class="detail-label">PHONE :</span>
-                        <span class="detail-value">[+1-234-567-8900]</span>
+                        <span class="detail-value">{{ global_about.phone|default:"N/A" }}</span>
                     </div>
                     <div class="detail-row">
                         <span class="detail-label">LOC :</span>
-                        <span class="detail-value">[Your City, Country]</span>
+                        <span class="detail-value">{{ global_about.location|default:"N/A" }}</span>
                     </div>
                 </div>
             </div>
