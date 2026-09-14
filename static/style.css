@@ -3816,3 +3816,243 @@ html[data-theme='light'] .card-lanyard {
     transform: scale(1.05);
     background: var(--text-muted);
 }
+
+/* ==========================================================================
+   About Page & Shared Sections Styles (Added to fix broken designs)
+   ========================================================================== */
+
+/* About Hero */
+.about-hero {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 2rem;
+    padding-top: clamp(1rem, 4vw, 3rem);
+}
+
+.about-hero__portrait {
+    width: clamp(120px, 20vw, 200px);
+    height: clamp(120px, 20vw, 200px);
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid var(--border-strong);
+    box-shadow: 0 0 0 6px var(--surface), 0 20px 50px rgba(0, 0, 0, 0.45);
+    margin: 1rem 0;
+}
+
+.about-hero__bio {
+    max-width: 65ch;
+    margin: 0 auto;
+    font-size: clamp(1rem, 1.8vw, 1.25rem);
+    color: var(--text-muted);
+    line-height: 1.8;
+}
+
+.about-hero__bio p {
+    margin-bottom: 1.5rem;
+}
+
+.about-hero__bio p:last-child {
+    margin-bottom: 0;
+}
+
+/* Certifications Grid */
+.cert-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2.5rem;
+}
+
+.cert-card {
+    display: flex;
+    flex-direction: column;
+    padding: 1.75rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    transition: transform 0.3s ease, border-color 0.3s ease;
+    height: 100%;
+}
+
+.cert-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--border-strong);
+}
+
+.cert-card__badge {
+    align-self: flex-start;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--accent);
+    background: var(--accent-soft);
+    border-radius: 999px;
+    margin-bottom: 1.25rem;
+}
+
+.cert-card__title {
+    font-size: 1.15rem;
+    margin-bottom: 0.5rem;
+    color: var(--text);
+}
+
+.cert-card__meta {
+    font-size: 0.9rem;
+    color: var(--text-faint);
+    margin-bottom: 1.5rem;
+    flex-grow: 1;
+}
+
+.cert-card__link {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text);
+    text-decoration: none;
+    transition: color 0.2s ease;
+    align-self: flex-start;
+    margin-top: auto;
+}
+
+.cert-card__link:hover {
+    color: var(--accent);
+}
+
+/* Timeline */
+.timeline {
+    margin-top: var(--section-gap);
+}
+
+.timeline__wrapper {
+    position: relative;
+    padding-left: 2rem;
+    margin-top: 2.5rem;
+}
+
+@media (min-width: 768px) {
+    .timeline__wrapper {
+        padding-left: 3rem;
+    }
+}
+
+.timeline__line {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 8px;
+    width: 2px;
+    background: var(--border);
+    border-radius: 2px;
+}
+
+@media (min-width: 768px) {
+    .timeline__line {
+        left: 12px;
+    }
+}
+
+.timeline__line-fill {
+    width: 100%;
+    height: 100%;
+    background: var(--accent);
+    transform-origin: top;
+    transform: scaleY(0);
+    transition: transform 0.5s ease-out;
+}
+
+.timeline__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+}
+
+.timeline__item {
+    position: relative;
+}
+
+.timeline__marker {
+    position: absolute;
+    top: 0.25rem;
+    left: -2rem;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--bg);
+    border: 2px solid var(--accent);
+    z-index: 2;
+    transform: translateX(-4px);
+}
+
+@media (min-width: 768px) {
+    .timeline__marker {
+        left: -3rem;
+        transform: translateX(-2px);
+    }
+}
+
+.timeline__content {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.timeline__type {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--accent);
+}
+
+.timeline__date {
+    font-size: 0.85rem;
+    color: var(--text-faint);
+    font-family: var(--font-mono);
+}
+
+.timeline__title {
+    font-size: 1.25rem;
+    color: var(--text);
+    margin: 0.25rem 0;
+}
+
+.timeline__location {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.timeline__description {
+    font-size: 1rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-top: 0.5rem;
+}
+
+/* CTA Band */
+.cta-band {
+    text-align: center;
+    padding: 4rem 1.5rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    margin-top: var(--section-gap);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.cta-band h2 {
+    font-size: clamp(2rem, 4vw, 3rem);
+}
