@@ -3435,6 +3435,10 @@ html[data-theme='light'] .hero-card-lens-wrapper[data-theme='dark'] .hero__name 
     transform-origin: top center;
     transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
     cursor: pointer; /* Indicates it's interactive */
+    width: 100%;
+    max-width: 420px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .contact-profile-card:hover {
@@ -3643,10 +3647,8 @@ html[data-theme='light'] .card-lanyard {
 .detail-value {
     font-family: var(--font-mono);
     color: var(--text);
-    max-width: 150px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    text-align: right;
+    word-break: break-word;
 }
 
 .profile-footer {
