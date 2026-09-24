@@ -102,3 +102,52 @@ class PortfolioHelperAndModelTests(TestCase):
     def test_skills_resolved_icon_slug(self):
         skill = Skills(name='React', category='Frontend', proficiency=90)
         self.assertEqual(skill.resolved_icon_slug, 'react')
+
+
+class SingleUserAdminSecurityTests(TestCase):
+    def setUp(self):
+        from django.contrib.auth import get_user_model
+        from django.contrib import admin
+        from django.contrib.auth.models import User, Group
+
+        self.User = get_user_model()
+        self.admin_site = admin.site
+        self.owner = self.User.objects.create_superuser(
+            username='phayvo',
+            email='phayvo@example.com',
+            password='testpassword123',
+        )
+        self.other_user = self.User.objects.create_superuser(
+            username='intruder',
+            email='intruder@example.com',
+            password='testpassword123',
+        )
+
+    def test_unauthenticated_admin_returns_404(self):
+        response = self.client.get('/admin/')
+        self.assertEqual(response.status_code, 404)
+
+    def test_admin_login_without_gate_key_returns_404(self):
+        response = self.client.get('/admin/login/')
+        self.assertEqual(response.status_code, 404)
+
+    def test_admin_login_with_valid_gate_key_returns_200(self):
+        response = self.client.get('/admin/login/?key=phayvo')
+        self.assertEqual(response.status_code, 200)
+
+    def test_user_and_group_models_are_unregistered(self):
+        from django.contrib.auth.models import User, Group
+        self.assertFalse(self.admin_site.is_registered(User))
+        self.assertFalse(self.admin_site.is_registered(Group))
+
+    def test_other_user_denied_admin_access(self):
+        self.client.login(username='intruder', password='testpassword123')
+        response = self.client.get('/admin/')
+        # Non-owner user gets 404 or denied
+        self.assertIn(response.status_code, [403, 404])
+
+    def test_owner_granted_admin_access(self):
+        self.client.login(username='phayvo', password='testpassword123')
+        response = self.client.get('/admin/')
+        self.assertEqual(response.status_code, 200)
+

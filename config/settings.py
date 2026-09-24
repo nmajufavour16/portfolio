@@ -139,7 +139,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Africa/Lagos'
 
 USE_I18N = True
 
@@ -170,8 +170,9 @@ SPOTIFY_CLIENT_SECRET = os.environ.get('SPOTIFY_CLIENT_SECRET')
 SPOTIFY_REFRESH_TOKEN = os.environ.get('SPOTIFY_REFRESH_TOKEN')
 
 # Single-User & Stealth Admin Gate Settings
-ADMIN_USERNAME = os.environ.get('ADMIN_USERNAME', 'phayvo')
-ADMIN_GATE_KEY = os.environ.get('ADMIN_GATE_KEY', 'phayvo')
+ADMIN_USERNAME = os.environ.get('ADMIN_USERNAME') or 'phayvo'
+ADMIN_GATE_KEY = os.environ.get('ADMIN_GATE_KEY') or 'phayvo'
+
 
 # Email Configuration
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
