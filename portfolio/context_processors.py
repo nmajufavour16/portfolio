@@ -1,5 +1,8 @@
 from .models import AboutMe
 
 def site_info(request):
-    global_about = AboutMe.objects.first()
+    try:
+        global_about = AboutMe.objects.first()
+    except Exception:
+        global_about = None
     return {'global_about': global_about}

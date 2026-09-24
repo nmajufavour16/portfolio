@@ -81,6 +81,32 @@ class PortfolioViewTests(TestCase):
         response = self.client.get(reverse('blog'))
         self.assertEqual(response.status_code, 200)
 
+    def test_error_404_view(self):
+        response = self.client.get(reverse('error_404'))
+        self.assertEqual(response.status_code, 404)
+        self.assertTemplateUsed(response, 'errors/404.html')
+        self.assertContains(response, '404', status_code=404)
+        self.assertContains(response, 'Lost in the void.', status_code=404)
+
+    def test_error_500_view(self):
+        response = self.client.get(reverse('error_500'))
+        self.assertEqual(response.status_code, 500)
+        self.assertTemplateUsed(response, 'errors/500.html')
+        self.assertContains(response, '500', status_code=500)
+        self.assertContains(response, 'System hiccup.', status_code=500)
+
+    def test_error_403_view(self):
+        response = self.client.get(reverse('error_403'))
+        self.assertEqual(response.status_code, 403)
+        self.assertTemplateUsed(response, 'errors/403.html')
+        self.assertContains(response, '403', status_code=403)
+        self.assertContains(response, 'Restricted territory.', status_code=403)
+
+    def test_nonexistent_url_returns_404(self):
+        response = self.client.get('/this-page-definitely-does-not-exist-12345/')
+        self.assertEqual(response.status_code, 404)
+        self.assertTemplateUsed(response, 'errors/404.html')
+
 
 class PortfolioHelperAndModelTests(TestCase):
     def test_group_skills_by_category(self):
@@ -132,7 +158,9 @@ class SingleUserAdminSecurityTests(TestCase):
         self.assertEqual(response.status_code, 404)
 
     def test_admin_login_with_valid_gate_key_returns_200(self):
-        response = self.client.get('/admin/login/?key=phayvo')
+        from django.conf import settings
+        gate_key = getattr(settings, 'ADMIN_GATE_KEY', 'phayvo')
+        response = self.client.get(f'/admin/login/?key={gate_key}')
         self.assertEqual(response.status_code, 200)
 
     def test_user_and_group_models_are_unregistered(self):

@@ -26,7 +26,7 @@ def single_user_has_permission(self, request):
     Strictly permits only the designated single owner (superuser 'phayvo')
     to access the admin site. All other users (even if staff) are denied.
     """
-    owner_username = getattr(settings, 'ADMIN_USERNAME', 'phayvo')
+    owner_username = getattr(settings, 'ADMIN_USERNAME')
     return bool(
         request.user
         and request.user.is_authenticated
@@ -77,7 +77,7 @@ def stealth_login(self, request, extra_context=None):
             return redirect(self.index(request))
         raise Http404("Page not found")
 
-    gate_key = getattr(settings, 'ADMIN_GATE_KEY', 'phayvo')
+    gate_key = getattr(settings, 'ADMIN_GATE_KEY')
     provided_key = (
         request.GET.get('key')
         or request.GET.get('gate')
@@ -105,18 +105,15 @@ admin.site.site_header = "Phayvo Studio"
 admin.site.site_title = "Phayvo Admin"
 admin.site.index_title = "Portfolio Management"
 
-# -----------------------------------------------------------------------------
+
 # Hide User and Group management from the Admin UI
-# -----------------------------------------------------------------------------
 if admin.site.is_registered(User):
     admin.site.unregister(User)
 if admin.site.is_registered(Group):
     admin.site.unregister(Group)
 
 
-# -----------------------------------------------------------------------------
 # Portfolio Model Registrations
-# -----------------------------------------------------------------------------
 class ProjectImageInline(admin.TabularInline):
     model = ProjectImage
     extra = 1

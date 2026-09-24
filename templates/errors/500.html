@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}500 — Server Error{% endblock %}
+{% block meta_description %}Internal server error.{% endblock %}
+
+{% block extra_head %}
+<style>
+    /* Critical fallback styles in case static assets fail during server crash */
+    .error-page { min-height: 70vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: clamp(2rem, 5vw, 4rem) 1.5rem; }
+    .error-page__code { font-size: clamp(6rem, 16vw, 13rem); font-weight: 800; line-height: 1; margin: 0; font-family: monospace; }
+    .error-page__title { font-size: clamp(1.5rem, 3.5vw, 2.5rem); font-weight: 700; margin: 1rem 0 0.5rem; }
+    .error-page__desc { max-width: 440px; margin: 0 auto 2.5rem; font-size: 1.05rem; line-height: 1.6; }
+    .error-page__actions { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="error-page" data-reveal>
+    <div class="hero__cursor-orb" aria-hidden="true" style="opacity: 0.35;"></div>
+    
+    <h1 class="error-page__code">500</h1>
+    <h2 class="error-page__title">System hiccup.</h2>
+    <p class="error-page__desc">Our servers are currently experiencing some turbulence. Please try again in a few moments.</p>
+    
+    <div class="error-page__actions">
+        <a href="{% url 'home' %}" class="btn btn--primary">Return Home</a>
+        <a href="{% url 'contact' %}" class="btn btn--secondary">Report Issue</a>
+    </div>
+</section>
+{% endblock %}

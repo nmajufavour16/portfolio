@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}404 — Page Not Found{% endblock %}
+{% block meta_description %}The requested page could not be found.{% endblock %}
+
+{% block content %}
+<section class="error-page" data-reveal>
+    <div class="hero__cursor-orb" aria-hidden="true" style="opacity: 0.35;"></div>
+    
+    <h1 class="error-page__code">404</h1>
+    <h2 class="error-page__title">Lost in the void.</h2>
+    <p class="error-page__desc">The page you're looking for has drifted out of bounds or doesn't exist.</p>
+    
+    <div class="error-page__actions">
+        <a href="{% url 'home' %}" class="btn btn--primary">Return Home</a>
+        <a href="{% url 'projects' %}" class="btn btn--secondary">Explore Work</a>
+    </div>
+</section>
+{% endblock %}
