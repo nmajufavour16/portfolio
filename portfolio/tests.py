@@ -163,6 +163,13 @@ class SingleUserAdminSecurityTests(TestCase):
         response = self.client.get(f'/admin/login/?key={gate_key}')
         self.assertEqual(response.status_code, 200)
 
+    def test_admin_index_with_valid_gate_key_redirects_and_renders_login(self):
+        from django.conf import settings
+        gate_key = getattr(settings, 'ADMIN_GATE_KEY', 'phayvo')
+        response = self.client.get(f'/admin/?key={gate_key}', follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Phayvo Studio')
+
     def test_user_and_group_models_are_unregistered(self):
         from django.contrib.auth.models import User, Group
         self.assertFalse(self.admin_site.is_registered(User))

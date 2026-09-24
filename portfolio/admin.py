@@ -36,6 +36,40 @@ def single_user_has_permission(self, request):
     )
 
 
+def is_gate_unlocked(request):
+    """
+    Check if the request provides the stealth gate key via:
+    1. Direct query parameter ?key=... or ?gate=...
+    2. Embedded inside the 'next' parameter (e.g. ?next=/admin/?key=...)
+    3. An already unlocked session flag.
+    """
+    gate_key = getattr(settings, 'ADMIN_GATE_KEY', 'phayvo')
+    if not gate_key:
+        return True
+
+    # 1. Direct query parameter
+    param_key = request.GET.get('key') or request.GET.get('gate')
+    if param_key == gate_key:
+        request.session['admin_gate_unlocked'] = True
+        return True
+
+    # 2. Key embedded in 'next' redirection parameter
+    next_param = request.GET.get('next', '')
+    if next_param and ('key=' in next_param or 'gate=' in next_param):
+        from urllib.parse import urlparse, parse_qs
+        parsed_qs = parse_qs(urlparse(next_param).query)
+        next_key = (parsed_qs.get('key', [None])[0] or parsed_qs.get('gate', [None])[0])
+        if next_key == gate_key:
+            request.session['admin_gate_unlocked'] = True
+            return True
+
+    # 3. Session flag
+    if request.session.get('admin_gate_unlocked') is True:
+        return True
+
+    return False
+
+
 def stealth_admin_view(self, view, cacheable=False):
     """
     Wrap every admin view so that any unauthorized / unauthenticated request
@@ -48,16 +82,8 @@ def stealth_admin_view(self, view, cacheable=False):
         if not self.has_permission(request):
             if request.user.is_authenticated:
                 raise Http404("Page not found")
-            gate_key = getattr(settings, 'ADMIN_GATE_KEY', 'phayvo')
-            provided_key = (
-                request.GET.get('key')
-                or request.GET.get('gate')
-                or request.session.get('admin_gate_unlocked')
-            )
-            if gate_key and provided_key == gate_key:
-                request.session['admin_gate_unlocked'] = True
-                return orig_wrapper(request, *args, **kwargs)
-            raise Http404("Page not found")
+            if not is_gate_unlocked(request):
+                raise Http404("Page not found")
         return orig_wrapper(request, *args, **kwargs)
 
     return update_wrapper(inner, view)
@@ -69,25 +95,19 @@ def stealth_login(self, request, extra_context=None):
     - If user is already authenticated as the owner, redirect to admin index.
     - If user is authenticated as anyone else, raise 404.
     - If user is unauthenticated, require the secret gate key (?key=<val> or ?gate=<val>
-      or an already unlocked session). Without the key, raise 404 so unauthorized
+      or an already unlocked session or next redirect). Without the key, raise 404 so unauthorized
       visitors, bots, and crawlers see only 'Page Not Found'.
     """
     if request.user.is_authenticated:
         if self.has_permission(request):
-            return redirect(self.index(request))
+            from django.urls import reverse
+            return redirect(reverse('admin:index', current_app=self.name))
         raise Http404("Page not found")
 
-    gate_key = getattr(settings, 'ADMIN_GATE_KEY')
-    provided_key = (
-        request.GET.get('key')
-        or request.GET.get('gate')
-        or request.session.get('admin_gate_unlocked')
-    )
-    if gate_key and provided_key == gate_key:
-        request.session['admin_gate_unlocked'] = True
-        return self._orig_login(request, extra_context=extra_context)
+    if not is_gate_unlocked(request):
+        raise Http404("Page not found")
 
-    raise Http404("Page not found")
+    return self._orig_login(request, extra_context=extra_context)
 
 
 # Bind single-user and stealth logic to admin.site
