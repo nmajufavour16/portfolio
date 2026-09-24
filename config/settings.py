@@ -169,6 +169,10 @@ SPOTIFY_CLIENT_ID = os.environ.get('SPOTIFY_CLIENT_ID')
 SPOTIFY_CLIENT_SECRET = os.environ.get('SPOTIFY_CLIENT_SECRET')
 SPOTIFY_REFRESH_TOKEN = os.environ.get('SPOTIFY_REFRESH_TOKEN')
 
+# Single-User & Stealth Admin Gate Settings
+ADMIN_USERNAME = os.environ.get('ADMIN_USERNAME', 'phayvo')
+ADMIN_GATE_KEY = os.environ.get('ADMIN_GATE_KEY', 'phayvo')
+
 # Email Configuration
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'

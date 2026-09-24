@@ -106,19 +106,25 @@ def blog_detail(request, slug):
     return render(request, 'blog_detail.html', {'post': post})
 
 def about(request):
+    about_obj = AboutMe.objects.first()
+    first_milestone = Timeline.objects.order_by('date').first()
+    years_experience = (
+        max(0, timezone.now().year - first_milestone.date.year)
+        if first_milestone else 0
+    )
     context = {
-        'about': AboutMe.objects.first(),
+        'about': about_obj,
         'certifications': Timeline.objects.filter(event_type=Timeline.EventType.CERTIFICATION),
         'story_milestones': Timeline.objects.exclude(event_type=Timeline.EventType.CERTIFICATION),
+        'years_experience': years_experience,
+        'total_projects': Projects.objects.count(),
+        'spotify': get_spotify_listening(),
     }
     return render(request, 'about.html', context)
 
 def skills(request):
     all_skills = Skills.objects.all().order_by('category', '-proficiency')
-    grouped = {}
-    for skill in all_skills:
-        grouped.setdefault(skill.category, []).append(skill)
-    return render(request, 'skills.html', {'grouped_skills': grouped})
+    return render(request, 'skills.html', {'grouped_skills': group_skills_by_category(all_skills)})
 
 def contact(request):
     if request.method == 'POST':
@@ -159,11 +165,14 @@ def contact(request):
     return render(request, 'contact.html', {'form': form})
 
 def testimonials(request):
-    context = {'testimonials' : testimonials}
-    return render(request, context)
+    return redirect('home')
 
 def resume(request):
-    return render(request, 'resume.html')
+    about_obj = AboutMe.objects.first()
+    if about_obj and about_obj.resume_pdf:
+        return redirect(about_obj.resume_pdf.url)
+    messages.info(request, "Resume PDF is currently being updated.")
+    return redirect('about')
 
 def error_404(request, exception=None):
     return render(request, '404.html', status=404)

@@ -10,7 +10,6 @@ SPOTIFY_TOKEN_URL = 'https://accounts.spotify.com/api/token'
 SPOTIFY_API_URL = 'https://api.spotify.com/v1/me/player'
 logger = logging.getLogger(__name__)
 
-# FIX 1: Added the missing closing brackets to the GraphQL query
 CONTRIBUTIONS_QUERY = """
 query($username: String!) {
     user(login: $username) {
@@ -70,8 +69,6 @@ def get_github_contributions(username, cache_hours=1):
     cache_key = f'github_contributions_{normalized_username}'
     stale_cache_key = f'{cache_key}_stale'
     cached = cache.get(cache_key)
-    
-    # FIX 2: Return the cached data instead of None
     if cached is not None:
         return cached
     

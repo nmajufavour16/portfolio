@@ -1,8 +1,6 @@
 from django.db import models
-from django.db.models.sql.constants import GET_ITERATOR_CHUNK_SIZE
 from .utils import SIMPLE_ICON_SLUGS
 
-# Create your models here.
 class Skills(models.Model):
     name = models.CharField(max_length=100)
     proficiency = models.IntegerField()
@@ -126,7 +124,7 @@ class BlogPost(models.Model):
     @property
     def reading_time(self):
         words = len(self.content.split())
-        return max(1, words / 200)
+        return max(1, round(words / 200))
     
 class AboutMe(models.Model):
     name = models.CharField(max_length=100, default='Phayvo')
