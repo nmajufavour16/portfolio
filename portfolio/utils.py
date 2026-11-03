@@ -1,5 +1,5 @@
 import logging
-from datetime import date, datetime
+from datetime import date
 
 import requests
 from django.core.cache import cache
@@ -64,6 +64,11 @@ def _month_labels(weeks):
     return labels[-12:]
 
 
+def _integration_fallback(cache_key, stale_cache_key):
+    cache.set(f'{cache_key}_retry', True, timeout=60)
+    return cache.get(stale_cache_key)
+
+
 def get_github_contributions(username, cache_hours=1):
     normalized_username = username.strip().lower()
     cache_key = f'github_contributions_{normalized_username}'
@@ -72,10 +77,13 @@ def get_github_contributions(username, cache_hours=1):
     if cached is not None:
         return cached
     
+    if cache.get(f'{cache_key}_retry'):
+        return cache.get(stale_cache_key)
+
     token = getattr(settings, 'GITHUB_TOKEN', None)
     if not token:
         logger.warning('GITHUB_TOKEN is missing; contribution data cannot be refreshed.')
-        return cache.get(stale_cache_key)
+        return _integration_fallback(cache_key, stale_cache_key)
     
     try:
         response = requests.post(
@@ -90,11 +98,11 @@ def get_github_contributions(username, cache_hours=1):
         # Check if GraphQL returned an error despite a 200 OK status
         if "errors" in data:
             logger.warning('GitHub GraphQL API error: %s', data['errors'])
-            return cache.get(stale_cache_key)
+            return _integration_fallback(cache_key, stale_cache_key)
 
         user = data['data']['user']
         if user is None:
-            return cache.get(stale_cache_key)
+            return _integration_fallback(cache_key, stale_cache_key)
 
         calendar = user['contributionsCollection']['contributionCalendar']
         calendar['username'] = user['login']
@@ -109,88 +117,8 @@ def get_github_contributions(username, cache_hours=1):
         
     except (requests.RequestException, KeyError, ValueError, TypeError) as e:
         logger.warning('Failed to refresh GitHub contributions: %s', e)
-        return cache.get(stale_cache_key)
+        return _integration_fallback(cache_key, stale_cache_key)
 
-
-def get_github_activity(username, cache_hours=1):
-    normalized_username = username.strip().lower()
-    cache_key = f'github_activity_{normalized_username}'
-    stale_cache_key = f'{cache_key}_stale'
-    cached = cache.get(cache_key)
-    
-    if cached is not None:
-        return cached
-        
-    token = getattr(settings, 'GITHUB_TOKEN', None)
-    headers = {"Authorization": f"Bearer {token}"} if token else {}
-    headers["Accept"] = "application/vnd.github.v3+json"
-    
-    try:
-        response = requests.get(
-            f"https://api.github.com/users/{normalized_username}/events/public",
-            headers=headers,
-            timeout=5
-        )
-        response.raise_for_status()
-        events = response.json()
-        
-        # Parse the 4 most recent meaningful events
-        parsed_events = []
-        for event in events:
-            if len(parsed_events) >= 4:
-                break
-                
-            event_type = event.get('type')
-            repo_name = event.get('repo', {}).get('name')
-            created_at_str = event.get('created_at')
-            created_at = None
-            if created_at_str:
-                try:
-                    # GitHub API uses 'Z' for UTC, replace with '+00:00' for fromisoformat
-                    created_at = datetime.fromisoformat(created_at_str.replace('Z', '+00:00'))
-                except ValueError:
-                    pass
-            
-            item = {
-                'repo': repo_name,
-                'created_at': created_at,
-                'type': event_type,
-                'url': f"https://github.com/{repo_name}"
-            }
-            
-            if event_type == 'PushEvent':
-                commits = event.get('payload', {}).get('commits', [])
-                item['message'] = commits[0].get('message') if commits else "Pushed to repository"
-                item['badge'] = "push"
-            elif event_type == 'PullRequestEvent':
-                action = event.get('payload', {}).get('action', 'Opened')
-                number = event.get('payload', {}).get('number', '')
-                item['message'] = f"{action.capitalize()} PR #{number}: {event.get('payload', {}).get('pull_request', {}).get('title', '')}"
-                item['badge'] = "pull-request"
-            elif event_type == 'IssuesEvent':
-                action = event.get('payload', {}).get('action', 'Opened')
-                number = event.get('payload', {}).get('issue', {}).get('number', '')
-                item['message'] = f"{action.capitalize()} issue #{number}: {event.get('payload', {}).get('issue', {}).get('title', '')}"
-                item['badge'] = "issue"
-            elif event_type == 'WatchEvent':
-                item['message'] = f"Starred {repo_name} repository"
-                item['badge'] = "starred"
-            elif event_type == 'CreateEvent':
-                ref_type = event.get('payload', {}).get('ref_type', 'repository')
-                item['message'] = f"Created {ref_type} in {repo_name}"
-                item['badge'] = "created"
-            else:
-                continue # Skip other events for a cleaner feed
-                
-            parsed_events.append(item)
-            
-        cache.set(cache_key, parsed_events, timeout=cache_hours * 60 * 60)
-        cache.set(stale_cache_key, parsed_events, timeout=7 * 24 * 60 * 60)
-        return parsed_events
-        
-    except (requests.RequestException, KeyError, ValueError, TypeError) as e:
-        logger.warning('Failed to refresh GitHub activity: %s', e)
-        return cache.get(stale_cache_key) or []
 
 def _format_spotify_track(item, *, is_playing=False, played_at=None):
     album = item.get('album') or {}
@@ -214,11 +142,14 @@ def get_spotify_listening():
     if cached is not None:
         return cached
 
+    if cache.get(f'{cache_key}_retry'):
+        return cache.get(stale_cache_key)
+
     client_id = getattr(settings, 'SPOTIFY_CLIENT_ID', None)
     client_secret = getattr(settings, 'SPOTIFY_CLIENT_SECRET', None)
     refresh_token = getattr(settings, 'SPOTIFY_REFRESH_TOKEN', None)
     if not all((client_id, client_secret, refresh_token)):
-        return cache.get(stale_cache_key)
+        return _integration_fallback(cache_key, stale_cache_key)
 
     try:
         token_response = requests.post(
@@ -256,7 +187,7 @@ def get_spotify_listening():
         recent_response.raise_for_status()
         recent_items = recent_response.json().get('items', [])
         if not recent_items:
-            return cache.get(stale_cache_key)
+            return _integration_fallback(cache_key, stale_cache_key)
 
         recent = recent_items[0]
         listening = _format_spotify_track(
@@ -269,7 +200,7 @@ def get_spotify_listening():
         return listening
     except (requests.RequestException, KeyError, ValueError, TypeError) as exc:
         logger.warning('Failed to refresh Spotify listening data: %s', exc)
-        return cache.get(stale_cache_key)
+        return _integration_fallback(cache_key, stale_cache_key)
 
 def get_visit_count():
     from django.apps import apps

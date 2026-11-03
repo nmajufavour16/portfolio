@@ -26,7 +26,7 @@ class Projects(models.Model):
         AI = 'AI Integration'
         
     title = models.CharField(max_length=100)
-    slug = models.SlugField(max_length=100)
+    slug = models.SlugField(max_length=100, unique=True)
     category = models.CharField(max_length=50, choices=Category.choices, default=Category.FULLSTACK)
     thumbnail = models.ImageField(upload_to='projects/', blank=True, null=True)
     description = models.CharField(max_length=500)

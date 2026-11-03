@@ -23,9 +23,11 @@
         </ul>
     </header>
 
+    {% if project.thumbnail %}
     <div class="case-study__thumb" data-reveal>
         <img src="{{ project.thumbnail.url }}" alt="{{ project.title }}">
     </div>
+    {% endif %}
 
     {% if project.architecture_notes %}
     <section class="case-study__architecture">

@@ -194,6 +194,10 @@
     </section>
     {% endif %}
 
+    <div data-spotify-slot hx-get="{% url 'spotify_status' %}" hx-trigger="every 30s" hx-swap="innerHTML">
+        {% include 'partials/spotify_status.html' %}
+    </div>
+
     <!-- CLOSING CTA -->
     <section class="cta-band" data-reveal>
         <h2>Let's build something meaningful.</h2>

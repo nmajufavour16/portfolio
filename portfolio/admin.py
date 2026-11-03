@@ -43,9 +43,9 @@ def is_gate_unlocked(request):
     2. Embedded inside the 'next' parameter (e.g. ?next=/admin/?key=...)
     3. An already unlocked session flag.
     """
-    gate_key = getattr(settings, 'ADMIN_GATE_KEY', 'phayvo')
+    gate_key = settings.ADMIN_GATE_KEY
     if not gate_key:
-        return True
+        return False
 
     # 1. Direct query parameter
     param_key = request.GET.get('key') or request.GET.get('gate')

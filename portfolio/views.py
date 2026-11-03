@@ -1,3 +1,5 @@
+import logging
+
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.core.paginator import Paginator
@@ -11,29 +13,29 @@ from .models import AboutMe, Contact, Skills, Projects, BlogPost, Testimonials, 
 from .forms import ContactForm
 from .utils import (
     get_github_contributions,
-    get_github_activity,
     get_spotify_listening,
     get_tech_icons,
     get_visit_count,
     group_skills_by_category,
 )
 
+logger = logging.getLogger(__name__)
+
 def home(request):
     about = AboutMe.objects.first()
     projects = Projects.objects.prefetch_related('skills_used', 'gallery')
     skills = Skills.objects.all().order_by('category', '-proficiency')
     first_milestone = Timeline.objects.order_by('date').first()
-    github_username = 'nmajufavour16'
+    github_username = (about.github_username if about else None) or 'nmajufavour16'
     context = {
         'about': about,
+        'github_username': github_username,
+        'contributions': get_github_contributions(github_username),
+        'spotify': get_spotify_listening(),
         'projects' : projects,
-        'featured_projects': projects.filter(featured=True)[:4],
         'recent_posts': BlogPost.objects.filter(is_published=True)[:3],
         'testimonials': Testimonials.objects.all(),
-        'contributions': get_github_contributions(github_username),
-        'recent_activity': get_github_activity(github_username),
-        'spotify': get_spotify_listening(),
-        'github_username': github_username,
+        'project_categories': Projects.Category.choices,
         'expertise_groups': group_skills_by_category(skills),
         'tech_icons': get_tech_icons(skills),
         'total_skills': skills.count(),
@@ -55,26 +57,26 @@ def projects(request):
     })
 
 def project_list_dev(request):
-    projects = Projects.objects.exclude(category=Projects.Category.DESIGN)
-    
+    projects = Projects.objects.exclude(category=Projects.Category.DESIGN).prefetch_related('skills_used')
+
     tech = request.GET.get('tech')
     if tech:
         projects = projects.filter(skills_used__name=tech)
-    
+
     context = {
         'projects': projects.distinct(),
-        'skills': Skills.objects.filter(projects__isnull=False).distinct(),
+        'skills': Skills.objects.filter(projects__in=Projects.objects.exclude(category=Projects.Category.DESIGN)).distinct(),
         'active_filter': tech,
     }
-    
+
     if request.headers.get('HX-Request'):
-        return render(request, 'partials/project_grid_dev.html', context)
+        return render(request, 'partials/development_results.html', context)
     return render(request, 'project_list_dev.html', context)
 
 def project_list_design(request):
     projects = Projects.objects.filter(category=Projects.Category.DESIGN)
     context = {'projects': projects}
-    
+
     if request.headers.get('HX-Request'):
         return render(request, 'partials/project_grid_design.html', context)
     return render(request, 'project_list_design.html', context)
@@ -84,14 +86,14 @@ def project_detail(request, slug):
         Projects.objects.prefetch_related('gallery', 'skills_used'),
         slug=slug,
     )
-    
+
     if project.is_design:
         context = {
             'project': project,
-            'project_images': project.gallery.filter(stage=ProjectImage.Stage.PROCESS),
-            'final_images': project.gallery.filter(stage=ProjectImage.Stage.FINAL),
+            'process_images': [image for image in project.gallery.all() if image.stage == ProjectImage.Stage.PROCESS],
+            'final_images': [image for image in project.gallery.all() if image.stage == ProjectImage.Stage.FINAL],
         }
-        
+
         return render(request, 'project_detail_design.html', context)
     return render(request, 'project_detail_dev.html', {'project': project})
 
@@ -151,10 +153,10 @@ def contact(request):
                 
                 msg = EmailMultiAlternatives(subject, text_content, from_email, to_email, reply_to=reply_to)
                 msg.attach_alternative(html_content, "text/html")
-                msg.send(fail_silently=True)
-            except Exception as e:
-                # Silently fail so it doesn't break form submission if email settings aren't configured yet
-                pass
+                msg.send(fail_silently=False)
+            except Exception:
+                # The inquiry is saved even when notification delivery fails.
+                logger.exception('Contact notification failed for inquiry %s', contact_instance.pk)
 
             messages.success(request, "Thank you for reaching out. I'll respond to your message as soon as I can.")
             return redirect('contact')

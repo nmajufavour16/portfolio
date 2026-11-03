@@ -12,7 +12,7 @@
     --border-strong: rgba(255, 255, 255, 0.16);
     --text: #f5f5f4;
     --text-muted: #a1a1aa;
-    --text-faint: #6b6b70;
+    --text-faint: #919198;
     --accent: #32cd32;
     --accent-hover: #4ced4c;
     --accent-soft: rgba(50, 205, 50, 0.12);
@@ -47,7 +47,7 @@ html[data-theme='dark'],
     --border-strong: rgba(255, 255, 255, 0.16);
     --text: #f5f5f4;
     --text-muted: #a1a1aa;
-    --text-faint: #6b6b70;
+    --text-faint: #919198;
     --accent: #c8f051;
     --accent-hover: #d8fa6e;
     --accent-soft: rgba(200, 240, 81, 0.12);
@@ -2377,10 +2377,12 @@ html[data-theme='light'] .hero__name {
         opacity: 0;
         transform: translateY(-8px);
         pointer-events: none;
+        visibility: hidden;
         transition: opacity 0.25s ease, transform 0.25s ease;
     }
 
     .site-nav.is-open {
+        visibility: visible;
         opacity: 1;
         transform: translateY(0);
         pointer-events: auto;
@@ -4186,4 +4188,28 @@ html[data-theme='light'] .card-lanyard {
     gap: 1rem;
     flex-wrap: wrap;
     justify-content: center;
+}
+
+/* Content remains useful when optional scripts or animation libraries fail. */
+.form-field .errorlist {
+    color: var(--danger);
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+}
+.sp-card__title a { text-decoration: underline; text-underline-offset: 0.2em; }
+@media (max-width: 768px) {
+    .site-header:not([data-nav-ready]) .site-nav {
+        visibility: visible;
+        opacity: 1;
+        pointer-events: auto;
+        transform: none;
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+        scroll-behavior: auto !important;
+    }
+    [data-timeline-fill] { height: 100%; }
 }

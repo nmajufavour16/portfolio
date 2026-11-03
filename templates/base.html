@@ -55,7 +55,7 @@
 
     <!-- Compact navigation with a floating liquid-glass shell. -->
     <header class="site-header" x-data="{ mobileOpen: false, scrolled: false }"
-             x-init="window.addEventListener('scroll', () => scrolled = window.scrollY > 40)"
+             x-init="$el.dataset.navReady = 'true'; window.addEventListener('scroll', () => scrolled = window.scrollY > 40)"
              :class="{ 'is-scrolled': scrolled }">
         <div class="site-header__inner liquidGlass-wrapper">
             <span class="nav-border-glow" aria-hidden="true"></span>
@@ -69,7 +69,7 @@
                     <span>Phayvo</span>
                 </a>
 
-                <nav class="site-nav" :class="{ 'is-open': mobileOpen }" aria-label="Primary">
+                <nav id="primary-nav" class="site-nav" :class="{ 'is-open': mobileOpen }" aria-label="Primary" @keydown.escape="mobileOpen = false; $refs.menuToggle.focus()">
                     <a href="{% url 'home' %}" {% if request.resolver_match.url_name == 'home' %}aria-current="page"{% endif %}>Home</a>
                     <a href="{% url 'projects' %}" {% if 'project' in request.resolver_match.url_name %}aria-current="page"{% endif %}>Work</a>
                     <a href="{% url 'about' %}" {% if request.resolver_match.url_name == 'about' %}aria-current="page"{% endif %}>About</a>
@@ -92,7 +92,7 @@
                     <a href="{% url 'contact' %}" class="site-header__cta">Let's talk <span aria-hidden="true">↗</span></a>
                 </div>
 
-                <button class="site-header__toggle" @click="mobileOpen = !mobileOpen"
+                <button class="site-header__toggle" x-cloak x-ref="menuToggle" aria-controls="primary-nav" @click="mobileOpen = !mobileOpen"
                         :aria-expanded="mobileOpen.toString()" aria-label="Toggle menu"
                         :class="{ 'is-active': mobileOpen }">
                     <span></span><span></span><span></span>

@@ -5,15 +5,13 @@ charset-normalizer==3.4.9
 dj-database-url==3.1.2
 Django==6.0.7
 django-markdownify==0.9.7
-django-tailwind==4.5.0
-dotenv==0.9.9
+django-storages[s3]==1.14.6
 gunicorn==26.0.0
 idna==3.18
 Markdown==3.10.2
 packaging==26.2
 pillow==12.3.0
 psycopg2-binary==2.9.12
-pytailwindcss==0.3.1
 python-dotenv==1.2.2
 requests==2.34.2
 sqlparse==0.5.5

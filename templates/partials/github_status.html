@@ -1,0 +1,61 @@
+    {% if contributions %}
+    <div class="contrib-graph" data-spotlight>
+        <div class="contrib-graph__summary">
+            <div>
+                <span class="contrib-graph__metric">{{ contributions.totalContributions }}</span>
+                <span class="contrib-graph__label">contributions</span>
+            </div>
+            <div>
+                <span class="contrib-graph__metric">{{ contributions.totalCommits }}</span>
+                <span class="contrib-graph__label">commits</span>
+            </div>
+            <div>
+                <span class="contrib-graph__metric">{{ contributions.totalRepos }}</span>
+                <span class="contrib-graph__label">repos</span>
+            </div>
+            <div>
+                <span class="contrib-graph__metric">{{ contributions.currentStreak }}</span>
+                <span class="contrib-graph__label">day streak</span>
+            </div>
+            <a href="{{ contributions.profileUrl }}" target="_blank" rel="noopener" class="contrib-graph__profile">
+                @{{ contributions.username }} <span aria-hidden="true">↗</span>
+            </a>
+        </div>
+        <div class="contrib-graph__scroll" tabindex="0" aria-label="GitHub contribution calendar">
+            <div class="contrib-graph__wrapper">
+                <div class="contrib-graph__months" aria-hidden="true">
+                    {% for month in contributions.monthLabels %}<span>{{ month }}</span>{% endfor %}
+                </div>
+                <div class="contrib-graph__grid">
+                    {% for week in contributions.weeks %}
+                    <div class="contrib-graph__week">
+                        {% for day in week.contributionDays %}
+                        <span class="contrib-graph__day" data-count="{{ day.contributionCount }}" data-level="{{ day.contributionLevel|lower }}"
+                              title="{{ day.date }}: {{ day.contributionCount }} contributions"></span>
+                        {% endfor %}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="contrib-graph__footer">
+            <span>Synced from GitHub</span>
+            <div class="contrib-graph__legend" aria-label="Contribution intensity from less to more">
+                Less
+                <span class="legend-box" data-level="none"></span>
+                <span class="legend-box" data-level="first_quartile"></span>
+                <span class="legend-box" data-level="second_quartile"></span>
+                <span class="legend-box" data-level="third_quartile"></span>
+                <span class="legend-box" data-level="fourth_quartile"></span>
+                More
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="contrib-graph__empty">
+        <p>GitHub activity could not be refreshed right now.</p>
+        <a href="https://github.com/{{ github_username }}" target="_blank" rel="noopener">View @{{ github_username }} on GitHub ↗</a>
+    </div>
+    {% endif %}
+
+

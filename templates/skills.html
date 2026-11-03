@@ -21,7 +21,7 @@
                     <span>{{ skill.proficiency }}%</span>
                 </div>
                 <div class="proficiency-item__track">
-                    <div class="proficiency-item__fill" data-progress="{{ skill.proficiency }}"></div>
+                    <div class="proficiency-item__fill" data-progress="{{ skill.proficiency }}" style="width: {{ skill.proficiency }}%"></div>
                 </div>
             </li>
             {% endfor %}

@@ -1,5 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     const root = document.documentElement;
+    const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const reducedMotion = motionPreference.matches;
     const themeColor = document.querySelector('meta[name="theme-color"]');
     const themeToggle = document.querySelector('[data-theme-toggle]');
 
@@ -58,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     const techVerb = document.querySelector('[data-tech-verb]');
-    if (techVerb) {
+    if (techVerb && !reducedMotion) {
         const verbs = ['engineer', 'deploy', 'design', 'orchestrate'];
         let verbIndex = 0;
         window.setInterval(() => {
@@ -87,18 +89,25 @@ document.addEventListener('DOMContentLoaded', () => {
     // touch and reduced-motion users.
     const hero = document.querySelector('.hero');
     const heroCard = document.querySelector('.hero-card');
-    const canUseLens = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const canUseLens = !reducedMotion && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
     if (hero && heroCard && canUseLens) {
         // Create reverse-theme clone wrapper
         const cloneWrapper = document.createElement('div');
         cloneWrapper.className = 'hero-card-lens-wrapper';
+        cloneWrapper.style.opacity = 0;
         cloneWrapper.setAttribute('aria-hidden', 'true');
+        cloneWrapper.inert = true;
 
         const reverseContainer = document.createElement('div');
         reverseContainer.className = 'lens-reverse-container';
         
         const clone = heroCard.cloneNode(true);
+        clone.querySelectorAll('[data-spotify-slot]').forEach((el) => {
+            el.removeAttribute('hx-get');
+            el.removeAttribute('hx-trigger');
+            el.removeAttribute('hx-swap');
+        });
         const glow = clone.querySelector('.nav-border-glow');
         if (glow) glow.remove();
         
@@ -133,8 +142,14 @@ document.addEventListener('DOMContentLoaded', () => {
         let currentX = targetX;
         let currentY = targetY;
         let active = false;
+        let frame = null;
 
         const animateFluidCursor = () => {
+            if (!active) {
+                cloneWrapper.style.opacity = 0;
+                frame = null;
+                return;
+            }
             const deltaX = targetX - currentX;
             const deltaY = targetY - currentY;
             currentX += deltaX * 0.13;
@@ -157,12 +172,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
             cloneWrapper.style.opacity = active ? 1 : 0;
 
-            requestAnimationFrame(animateFluidCursor);
+            frame = requestAnimationFrame(animateFluidCursor);
         };
 
         let idleTimeout;
         hero.addEventListener('pointermove', (e) => {
             active = true;
+            if (frame === null) frame = requestAnimationFrame(animateFluidCursor);
             const rect = hero.getBoundingClientRect();
             targetX = e.clientX - rect.left;
             targetY = e.clientY - rect.top;
@@ -179,14 +195,13 @@ document.addEventListener('DOMContentLoaded', () => {
             hero.dataset.cursorActive = 'false';
         });
         
-        requestAnimationFrame(animateFluidCursor);
     }
 
     const hasGsap = window.gsap && window.ScrollTrigger;
 
     // Smooth scroll — synced to GSAP's ticker rather than its own rAF loop,
     // so ScrollTrigger stays perfectly in step with it.
-    if (window.Lenis) {
+    if (window.Lenis && !reducedMotion) {
         const lenis = new Lenis();
 
         if (hasGsap) {
@@ -202,7 +217,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    if (!hasGsap) return;
+    const errorSummary = document.querySelector('[data-error-summary]');
+    errorSummary?.focus();
+
+    if (!hasGsap || reducedMotion) return;
     gsap.registerPlugin(ScrollTrigger);
 
     // Generic fade/rise-in reveal for anything marked [data-reveal]
@@ -234,7 +252,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Skill proficiency bars — fill from 0 to their target % on scroll into view
     gsap.utils.toArray('[data-progress]').forEach((el) => {
         const target = el.dataset.progress;
-        gsap.to(el, {
+        gsap.fromTo(el, { width: '0%' }, {
             width: `${target}%`,
             duration: 1,
             ease: 'power2.out',

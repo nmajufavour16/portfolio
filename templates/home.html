@@ -34,7 +34,7 @@
 
                 <div class="hero-card__footer-actions">
                     <div class="hero__actions">
-                        <a href="{% if about.resume_pdf %}{{ about.resume_pdf.url }}{% else %}#{% endif %}" class="btn btn--primary" target="_blank">View Resume</a>
+                        <a href="{% url 'resume' %}" class="btn btn--primary" target="_blank" rel="noopener">View Resume</a>
                     </div>
 
                     <div class="hero__socials">
@@ -46,22 +46,9 @@
                     </div>
                 </div>
 
-                {% if spotify %}
-                <a class="listening-strip" href="{{ spotify.spotify_url|default:'https://open.spotify.com/' }}"
-                   target="_blank" rel="noopener" aria-label="Open {{ spotify.title }} on Spotify"
-                   hx-get="{% url 'spotify_status' %}" hx-trigger="every 30s" hx-swap="outerHTML">
-                    {% if spotify.image_url %}<img src="{{ spotify.image_url }}" alt="" class="listening-strip__cover">{% endif %}
-                    <span class="listening-strip__copy">
-                        <span class="listening-strip__state">
-                            <span class="listening-strip__signal {% if spotify.is_playing %}is-playing{% endif %}" aria-hidden="true"><i></i><i></i><i></i></span>
-                            {% if spotify.is_playing %}Currently listening{% else %}Last listened{% endif %}
-                        </span>
-                        <strong>{{ spotify.title }}</strong>
-                        <span>{{ spotify.artist }}</span>
-                    </span>
-                    <span class="listening-strip__source">Spotify ↗</span>
-                </a>
-                {% endif %}
+                <div data-spotify-slot hx-get="{% url 'spotify_status' %}" hx-trigger="every 30s" hx-swap="innerHTML">
+                    {% include 'partials/spotify_status.html' %}
+                </div>
             </div>
         </div>
     </article>
@@ -85,25 +72,25 @@
 <section class="stats-bar" data-reveal>
     <div class="stat">
         <div class="stat__number">
-            <span class="stat__value" data-counter data-target="{{ years_experience }}">0</span>+
+            <span class="stat__value" data-counter data-target="{{ years_experience }}">{{ years_experience }}</span>+
         </div>
         <span class="stat__label">Years Experience</span>
     </div>
     <div class="stat">
         <div class="stat__number">
-            <span class="stat__value" data-counter data-target="{{ total_skills }}">0</span>+
+            <span class="stat__value" data-counter data-target="{{ total_skills }}">{{ total_skills }}</span>+
         </div>
         <span class="stat__label">Tech Stack Skills</span>
     </div>
     <div class="stat">
         <div class="stat__number">
-            <span class="stat__value" data-counter data-target="{{ total_projects }}">0</span>+
+            <span class="stat__value" data-counter data-target="{{ total_projects }}">{{ total_projects }}</span>+
         </div>
         <span class="stat__label">Total Projects</span>
     </div>
     <div class="stat">
         <div class="stat__number">
-            <span class="stat__value" data-counter data-target="{{ visit_count }}">0</span>
+            <span class="stat__value" data-counter data-target="{{ visit_count }}">{{ visit_count }}</span>
         </div>
         <span class="stat__label">Profile Visitors</span>
     </div>
@@ -116,94 +103,34 @@
         <h2 class="section-title">GitHub Activity</h2>
     </header>
 
-    {% if contributions %}
-    <div class="contrib-graph" data-spotlight>
-        <div class="contrib-graph__summary">
-            <div>
-                <span class="contrib-graph__metric">{{ contributions.totalContributions }}</span>
-                <span class="contrib-graph__label">contributions</span>
-            </div>
-            <div>
-                <span class="contrib-graph__metric">{{ contributions.totalCommits }}</span>
-                <span class="contrib-graph__label">commits</span>
-            </div>
-            <div>
-                <span class="contrib-graph__metric">{{ contributions.totalRepos }}</span>
-                <span class="contrib-graph__label">repos</span>
-            </div>
-            <div>
-                <span class="contrib-graph__metric">{{ contributions.currentStreak }}</span>
-                <span class="contrib-graph__label">day streak</span>
-            </div>
-            <a href="{{ contributions.profileUrl }}" target="_blank" rel="noopener" class="contrib-graph__profile">
-                @{{ contributions.username }} <span aria-hidden="true">↗</span>
-            </a>
-        </div>
-        <div class="contrib-graph__scroll" tabindex="0" aria-label="GitHub contribution calendar">
-            <div class="contrib-graph__wrapper">
-                <div class="contrib-graph__months" aria-hidden="true">
-                    {% for month in contributions.monthLabels %}<span>{{ month }}</span>{% endfor %}
-                </div>
-                <div class="contrib-graph__grid">
-                    {% for week in contributions.weeks %}
-                    <div class="contrib-graph__week">
-                        {% for day in week.contributionDays %}
-                        <span class="contrib-graph__day" data-count="{{ day.contributionCount }}" data-level="{{ day.contributionLevel|lower }}"
-                              title="{{ day.date }}: {{ day.contributionCount }} contributions"></span>
-                        {% endfor %}
-                    </div>
-                    {% endfor %}
-                </div>
-            </div>
-        </div>
-        <div class="contrib-graph__footer">
-            <span>Synced from GitHub</span>
-            <div class="contrib-graph__legend" aria-label="Contribution intensity from less to more">
-                Less
-                <span class="legend-box" data-level="none"></span>
-                <span class="legend-box" data-level="first_quartile"></span>
-                <span class="legend-box" data-level="second_quartile"></span>
-                <span class="legend-box" data-level="third_quartile"></span>
-                <span class="legend-box" data-level="fourth_quartile"></span>
-                More
-            </div>
-        </div>
-    </div>
-    {% else %}
-    <div class="contrib-graph__empty">
-        <p>GitHub activity could not be refreshed right now.</p>
-        <a href="https://github.com/{{ github_username }}" target="_blank" rel="noopener">View @{{ github_username }} on GitHub ↗</a>
-    </div>
-    {% endif %}
-
-
+    {% include 'partials/github_status.html' %}
 </section>
 
 <!-- SELECTED PROJECTS -->
 <section class="featured-work" data-reveal x-data="{ filter: 'all' }">
     <header class="section-header">
         <span class="section-index">02</span>
-        <h2 class="section-title">Featured Work</h2>
-        <div class="selected-projects__filters" style="margin-left: auto;">
-            <button @click="filter = 'all'" :class="{ 'is-active': filter === 'all' }">All</button>
-            <button @click="filter = 'design'" :class="{ 'is-active': filter === 'design' }">Design</button>
-            <button @click="filter = 'frontend'" :class="{ 'is-active': filter === 'frontend' }">Frontend</button>
-            <button @click="filter = 'fullstack'" :class="{ 'is-active': filter === 'fullstack' }">Fullstack</button>
+        <h2 class="section-title">Selected Work</h2>
+        <div class="selected-projects__filters" role="group" aria-label="Filter projects" x-cloak>
+            <button type="button" @click="filter = 'all'" :aria-pressed="filter === 'all'" :class="{ 'is-active': filter === 'all' }">All</button>
+            {% for value, label in project_categories %}
+            <button type="button" @click="filter = '{{ value|escapejs }}'" :aria-pressed="filter === '{{ value|escapejs }}'" :class="{ 'is-active': filter === '{{ value|escapejs }}' }">{{ label }}</button>
+            {% endfor %}
         </div>
     </header>
 
     <div class="selected-projects__grid">
         {% for project in projects %}
-        <div class="sp-card" style="cursor: pointer;" @click="window.location.href='{% url 'project_detail' project.slug %}'" x-show="filter === 'all' || (filter === 'design' && '{{ project.category }}' == 'Design') || (filter === 'frontend' && '{{ project.category }}' == 'Frontend') || (filter === 'fullstack' && '{{ project.category }}' == 'Full Stack Development')" x-transition>
+        <div class="sp-card" x-show="filter === 'all' || filter === '{{ project.category|escapejs }}'" x-transition>
             <div class="sp-card__header">
                 <span class="sp-badge">
-                    {% if project.category == 'Design' %}DESIGN{% elif project.category == 'Frontend' %}FRONTEND{% else %}FULLSTACK{% endif %}
+                    {{ project.get_category_display }}
                 </span>
                 {% if project.featured %}<span class="sp-badge sp-badge--featured">FEATURED</span>{% endif %}
             </div>
             
             <div class="sp-card__body">
-                <h3 class="sp-card__title">{{ project.title }}</h3>
+                <h3 class="sp-card__title"><a href="{% url 'project_detail' project.slug %}">{{ project.title }}</a></h3>
                 <p class="sp-card__desc">{{ project.description|truncatewords:20 }}</p>
                 
                 <div class="sp-card__tags">
@@ -239,13 +166,13 @@
         <h2 class="section-title">Core Expertise</h2>
     </header>
 
-    <div class="expertise__tabs" role="tablist">
-        <button role="tab" @click="active = 0"
+    <div class="expertise__tabs" role="group" aria-label="Filter expertise" x-cloak>
+        <button type="button" :aria-pressed="active === 0" @click="active = 0"
             :class="{ 'is-active': active === 0 }" class="expertise__tab">
             All
         </button>
         {% for category, skills in expertise_groups.items %}
-        <button role="tab" @click="active = {{ forloop.counter }}"
+        <button type="button" :aria-pressed="active === {{ forloop.counter }}" @click="active = {{ forloop.counter }}"
             :class="{ 'is-active': active === {{ forloop.counter }} }" class="expertise__tab">
             {{ category }}
         </button>
@@ -253,7 +180,7 @@
     </div>
 
     <!-- The "All" panel -->
-    <div class="expertise__panel" x-show="active === 0" x-cloak>
+    <div class="expertise__panel" x-show="active === 0">
         <ul class="proficiency-list">
             {% for category, skills in expertise_groups.items %}
                 {% for skill in skills %}
@@ -263,7 +190,7 @@
                         <span>{{ skill.proficiency }}%</span>
                     </div>
                     <div class="proficiency-item__track">
-                        <div class="proficiency-item__fill" data-progress="{{ skill.proficiency }}"></div>
+                        <div class="proficiency-item__fill" data-progress="{{ skill.proficiency }}" style="width: {{ skill.proficiency }}%"></div>
                     </div>
                 </li>
                 {% endfor %}
@@ -281,7 +208,7 @@
                     <span>{{ skill.proficiency }}%</span>
                 </div>
                 <div class="proficiency-item__track">
-                    <div class="proficiency-item__fill" data-progress="{{ skill.proficiency }}"></div>
+                    <div class="proficiency-item__fill" data-progress="{{ skill.proficiency }}" style="width: {{ skill.proficiency }}%"></div>
                 </div>
             </li>
             {% endfor %}

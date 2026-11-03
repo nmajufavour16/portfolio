@@ -4,6 +4,8 @@
 > A minimalist, high-performance personal portfolio showcasing a unified blend of visual design and robust software engineering.
 
 ## ✦ Overview
+For local setup, production settings, media storage, and upgrade instructions, see [DEPLOYMENT.md](DEPLOYMENT.md).
+
 This repository contains the source code for my personal digital portfolio. Built as a headless-ready hybrid Django application, it serves as a central hub for my technical engineering projects, visual design case studies, and professional timeline. 
 
 The frontend architecture prioritizes an intuitive user experience, utilizing heavy whitespace, kinetic typography, and butter-smooth scroll animations, while the backend relies on a DRY, unified database model.

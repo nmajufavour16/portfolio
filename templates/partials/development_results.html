@@ -1,0 +1,24 @@
+<div id="development-results">
+    <nav class="tech-filter" aria-label="Filter by technology">
+        <a href="{% url 'project_list_dev' %}"
+           hx-get="{% url 'project_list_dev' %}"
+           hx-target="#development-results" hx-swap="outerHTML"
+           hx-push-url="true"
+           {% if not active_filter %}aria-current="true"{% endif %} class="tech-filter__pill {% if not active_filter %}is-active{% endif %}">
+            All
+        </a>
+        {% for skill in skills %}
+        <a href="{% url 'project_list_dev' %}?tech={{ skill.name|urlencode }}"
+           hx-get="{% url 'project_list_dev' %}?tech={{ skill.name|urlencode }}"
+           hx-target="#development-results" hx-swap="outerHTML"
+           hx-push-url="true"
+           {% if active_filter == skill.name %}aria-current="true"{% endif %} class="tech-filter__pill {% if active_filter == skill.name %}is-active{% endif %}">
+            {{ skill.name }}
+        </a>
+        {% endfor %}
+    </nav>
+
+    <div id="project-grid" class="project-grid" role="region" aria-label="Project results" aria-live="polite">
+        {% include 'partials/project_grid_dev.html' %}
+    </div>
+</div>

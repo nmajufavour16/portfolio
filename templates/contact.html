@@ -58,7 +58,7 @@
             </div>
 
             {% if messages %}
-            <ul class="form-messages">
+            <ul class="form-messages" role="status">
                 {% for message in messages %}
                 <li class="form-message form-message--{{ message.tags }}">{{ message }}</li>
                 {% endfor %}
@@ -69,27 +69,42 @@
                 {% csrf_token %}
                 {{ form.website }}
 
+                {% if form.errors %}
+                <div class="form-message form-message--error" role="alert" tabindex="-1" data-error-summary>
+                    <p>Please correct the following:</p>
+                    <ul>
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                        <li>{% if not field.is_hidden %}<a href="#{{ field.id_for_label }}">{{ field.label }}: {{ error }}</a>{% else %}{{ error }}{% endif %}</li>
+                        {% endfor %}
+                    {% endfor %}
+                    {% for error in form.non_field_errors %}<li>{{ error }}</li>{% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+
                 <div class="form-field form-field--minimal">
                     <label for="{{ form.name.id_for_label }}">NAME</label>
                     {{ form.name }}
-                    {% if form.name.errors %}<p class="form-field__error">{{ form.name.errors|striptags }}</p>{% endif %}
+                    {{ form.name.errors }}
                 </div>
 
                 <div class="form-field form-field--minimal">
                     <label for="{{ form.email.id_for_label }}">EMAIL</label>
                     {{ form.email }}
-                    {% if form.email.errors %}<p class="form-field__error">{{ form.email.errors|striptags }}</p>{% endif %}
+                    {{ form.email.errors }}
                 </div>
 
                 <div class="form-field form-field--minimal">
                     <label for="{{ form.subject.id_for_label }}">SUBJECT</label>
                     {{ form.subject }}
+                    {{ form.subject.errors }}
                 </div>
 
                 <div class="form-field form-field--minimal">
                     <label for="{{ form.message.id_for_label }}">MESSAGE</label>
                     {{ form.message }}
-                    {% if form.message.errors %}<p class="form-field__error">{{ form.message.errors|striptags }}</p>{% endif %}
+                    {{ form.message.errors }}
                 </div>
 
                 <button type="submit" class="btn-send-minimal">
@@ -110,6 +125,7 @@
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const card = document.querySelector('.contact-profile-card');
     if (!card) return;
     

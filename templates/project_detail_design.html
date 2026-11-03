@@ -16,9 +16,11 @@
         {% endif %}
     </header>
 
+    {% if project.thumbnail %}
     <div class="case-study__hero" data-reveal>
         <img src="{{ project.thumbnail.url }}" alt="{{ project.title }}">
     </div>
+    {% endif %}
 
     {% if process_images %}
     <section class="case-study__gallery case-study__gallery--process">
